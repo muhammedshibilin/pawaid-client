@@ -1,0 +1,58 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-400 to-emerald-600 p-4">
+    <div class="w-full max-w-md bg-white/90 backdrop-blur-sm shadow-2xl rounded-2xl p-8">
+      <div class="flex justify-center mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      </div>
+      <h2 class="text-3xl font-bold text-center mb-4 text-gray-800">Verify OTP</h2>
+      <p class="text-gray-600 text-center mb-6">Enter the 6-digit verification code sent to your mobile</p>
+  
+      <form [formGroup]="otpForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="flex justify-center space-x-2">
+          <input
+            #otpInput
+            *ngFor="let _ of [].constructor(6); let i = index"
+            type="text"
+            maxlength="1"
+            [formControlName]="'digit' + i"
+            (input)="onDigitInput($event, i)"
+            (keydown)="onKeyDown($event, i)"
+            class="w-12 h-14 text-center text-xl border-2 rounded-lg 
+                   focus:border-green-500 focus:outline-none 
+                   transition-all duration-200 
+                   text-gray-800 border-gray-300"
+          />
+        </div>
+  
+        <div *ngIf="otpForm.hasError('incomplete')" class="text-red-500 text-center">
+          Please enter the complete OTP
+        </div>
+  
+        <p class="text-center text-gray-600 mt-4" *ngIf="timeLeft > 0">
+          Resend OTP in: <strong>{{ timeLeft }}</strong> seconds
+        </p>
+        <button
+          type="submit"
+          [disabled]="otpForm.invalid"
+          class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 rounded-lg 
+                 hover:from-green-600 hover:to-emerald-700 
+                 transition-colors duration-300 
+                 focus:outline-none focus:ring-2 focus:ring-green-500
+                 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Verify OTP
+        </button>
+      </form>
+  
+      <div class="text-center mt-4">
+        <button
+          *ngIf="timeLeft === 0"
+          (click)="resendOTP()"
+          class="text-green-600 hover:underline focus:outline-none"
+        >
+          Resend OTP
+        </button>
+      </div>
+    </div>
+  </div>

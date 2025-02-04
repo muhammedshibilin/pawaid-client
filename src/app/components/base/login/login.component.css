@@ -1,0 +1,518 @@
+/* Background Pattern */
+.bg-pattern {
+  background-image: linear-gradient(135deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+                    linear-gradient(225deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+                    linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+                    linear-gradient(315deg, rgba(255,255,255,0.1) 25%, transparent 25%);
+  background-position: 10px 0, 10px 0, 0 0, 0 0;
+  background-size: 20px 20px;
+  background-repeat: repeat;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Form Focus Effects */
+input:focus {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Button Hover Effects */
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* User Type Selection Animation */
+.user-type-button {
+  transition: all 0.3s ease;
+}
+
+.user-type-button:hover {
+  transform: translateY(-2px);
+}
+
+/* Loading State */
+.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255, 0) 0%,
+    rgba(255,255,255, 0.2) 50%,
+    rgba(255,255,255, 0) 100%
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Error State */
+.error-shake {
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translateX(-1px);
+  }
+  20%, 80% {
+    transform: translateX(2px);
+  }
+  30%, 50%, 70% {
+    transform: translateX(-4px);
+  }
+  40%, 60% {
+    transform: translateX(4px);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .user-type-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Add to your existing styles */
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Prevent button text selection */
+button {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Smooth transitions for user type changes */
+.user-type-transition {
+  transition: all 0.3s ease;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .user-type-button {
+    padding: 0.5rem;
+  }
+  
+  input, button {
+    font-size: 14px;
+  }
+}
+
+/* Left side animation */
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fadeInSlide {
+  animation: fadeInSlide 0.6s ease-out;
+}
+
+/* Logo hover effect */
+.logo-hover {
+  transition: transform 0.3s ease;
+}
+
+.logo-hover:hover {
+  transform: scale(1.05);
+}
+
+/* Glass effect for right panel */
+.glass-effect {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .right-panel {
+    width: 100%;
+    backdrop-filter: none;
+  }
+}
+
+/* Enhanced mobile view */
+@media (max-width: 640px) {
+  .login-card {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .welcome-text {
+    font-size: 1.5rem;
+  }
+}
+
+/* Add these new animations */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
+}
+
+.delay-150 {
+  animation-delay: 150ms;
+}
+
+/* Text gradient effect */
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Enhanced hover effects */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Input group hover effect */
+.input-group:hover .input-icon {
+  color: #10b981;
+}
+
+/* Button gradient animation */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-animate {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* Animated gradient text effect */
+.animated-gradient-text {
+  background: linear-gradient(
+    to right,
+    #3B82F6, /* blue-500 */
+    #10B981, /* emerald-500 */
+    #0EA5E9, /* sky-500 */
+    #3B82F6  /* blue-500 */
+  );
+  background-size: 200% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: shine 3s linear infinite;
+  text-shadow: 0 2px 10px rgba(59, 130, 246, 0.1);
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* Optional: Add a hover effect */
+.animated-gradient-text:hover {
+  animation-play-state: paused;
+  transform: scale(1.02);
+  transition: transform 0.3s ease;
+}
+
+/* Add a subtle glow effect */
+.animated-gradient-text {
+  position: relative;
+}
+
+.animated-gradient-text::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    to right,
+    rgba(59, 130, 246, 0.2),
+    rgba(16, 185, 129, 0.2),
+    rgba(14, 165, 233, 0.2)
+  );
+  filter: blur(10px);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+
+
+/* Add a floating animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animated-gradient-text {
+  animation: shine 3s linear infinite, float 3s ease-in-out infinite;
+}
+
+/* Add these responsive styles */
+@media (max-width: 1024px) {
+  .animated-gradient-text {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .animated-gradient-text {
+    font-size: 2rem;
+  }
+
+  /* Adjust user type selection scrollbar */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  .overflow-x-auto::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+
+  /* Adjust form inputs for mobile */
+  input {
+    font-size: 16px !important; /* Prevent zoom on focus in iOS */
+  }
+
+  /* Adjust button sizes for better touch targets */
+  button {
+    min-height: 44px; /* Minimum touch target size */
+  }
+}
+
+/* Add smooth scroll behavior */
+.overflow-x-auto {
+  scroll-behavior: smooth;
+}
+
+/* Enhance touch interactions */
+@media (hover: none) {
+  .hover-scale:hover {
+    transform: none;
+  }
+  
+  .user-type-button:hover {
+    transform: none;
+  }
+}
+
+/* Optimize for different screen heights */
+@media (max-height: 700px) {
+  .min-h-screen {
+    min-height: auto;
+    padding: 1rem 0;
+  }
+}
+
+/* Add or update these styles */
+@media (max-width: 640px) {
+  .min-h-screen {
+    min-height: 100vh;
+    padding: 1rem;
+  }
+
+  /* Adjust the login card for better mobile view */
+  .bg-white\/95 {
+    margin-top: 1rem;
+  }
+
+  /* Make selection buttons more compact on mobile */
+  .grid-cols-4 button {
+    padding: 0.5rem;
+  }
+}
+
+/* Remove any overflow styles that might cause scrolling */
+.overflow-x-auto,
+.overflow-y-auto {
+  overflow: visible;
+}
+
+/* Ensure the page doesn't scroll horizontally */
+body {
+  overflow-x: hidden;
+}
+
+/* Adjust the container height for smaller screens */
+@media (max-height: 700px) {
+  .min-h-screen {
+    min-height: auto;
+    height: auto;
+    padding: 1rem;
+  }
+}
+
+/* Ensure buttons are properly sized */
+button {
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Remove previous animated-gradient-text styles and add these new ones */
+.gradient-text {
+  background: linear-gradient(
+    to right,
+    #3B82F6, /* blue-500 */
+    #10B981, /* emerald-500 */
+    #0EA5E9, /* sky-500 */
+    #3B82F6  /* blue-500 */
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: gradient 3s linear infinite;
+}
+
+@keyframes gradient {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* Remove any hover effects that might cause background changes */
+.gradient-text:hover {
+  transform: none;
+  background-color: transparent;
+}
+
+/* Optional: Add a subtle text shadow for better visibility */
+.gradient-text {
+  text-shadow: 0 2px 10px rgba(59, 130, 246, 0.1);
+}
+
+/* Add these new animations */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradient 3s linear infinite;
+}

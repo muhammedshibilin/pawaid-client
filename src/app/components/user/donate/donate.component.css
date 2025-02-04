@@ -1,0 +1,467 @@
+/* Modern Color Scheme */
+:root {
+  /* Main Colors */
+  --primary: #7C3AED;  /* Deep Purple */
+  --secondary: #EC4899; /* Pink */
+  --accent: #F59E0B;   /* Amber */
+  
+  /* Gradients */
+  --gradient-main: linear-gradient(135deg, #7C3AED, #EC4899);
+  --gradient-accent: linear-gradient(135deg, #F59E0B, #F97316);
+  --gradient-success: linear-gradient(135deg, #10B981, #059669);
+  
+  /* Background */
+  --bg-light: #F3F4F6;
+  --bg-white: #FFFFFF;
+  --bg-card: rgba(255, 255, 255, 0.98);
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(124, 58, 237, 0.1);
+  --shadow-md: 0 4px 6px rgba(124, 58, 237, 0.15);
+  --shadow-lg: 0 10px 15px rgba(124, 58, 237, 0.2);
+}
+
+/* Main Container */
+.container {
+  @apply min-h-screen p-4;
+  background: linear-gradient(45deg, #F3F4F6, #FFFFFF);
+}
+
+/* Donation Card */
+.donation-card {
+  @apply max-w-md mx-auto p-5 rounded-2xl;
+  background: var(--bg-card);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(124, 58, 237, 0.1);
+}
+
+/* Amount Grid */
+.amount-grid {
+  @apply grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4;
+}
+
+.amount-button {
+  @apply p-3 rounded-xl text-center transition-all duration-200;
+  background: var(--bg-light);
+  color: var(--primary);
+  border: 2px solid transparent;
+}
+
+.amount-button:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.amount-button.active {
+  background: var(--gradient-main);
+  color: white;
+  transform: scale(1.02);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Custom Amount Input */
+.custom-amount-wrapper {
+  @apply relative mb-4;
+}
+
+.custom-amount-input {
+  @apply w-full p-3 rounded-xl text-center;
+  background: var(--bg-light);
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.custom-amount-input:focus {
+  background: white;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Donation Type Toggle */
+.donation-type-toggle {
+  @apply flex justify-center gap-3 mb-4;
+}
+
+.donation-type-button {
+  @apply px-4 py-2 rounded-xl flex items-center gap-2;
+  background: var(--bg-light);
+  color: var(--primary);
+  transition: all 0.2s ease;
+}
+
+.donation-type-button.active {
+  background: var(--gradient-main);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Form Inputs */
+.form-group {
+  @apply mb-3;
+}
+
+.form-input {
+  @apply w-full px-4 py-2.5 rounded-xl;
+  background: var(--bg-light);
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus {
+  background: white;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Donate Button */
+.donate-button {
+  @apply w-full py-3 rounded-xl text-white font-medium relative overflow-hidden;
+  background: var(--gradient-main);
+  transition: all 0.3s ease;
+}
+
+.donate-button:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.donate-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Trust Indicators */
+.trust-indicators {
+  @apply grid grid-cols-3 gap-3 mt-4;
+}
+
+.trust-card {
+  @apply p-2 rounded-xl text-center transition-all duration-200;
+  background: var(--bg-light);
+}
+
+.trust-icon-wrapper {
+  @apply w-8 h-8 mx-auto rounded-full flex items-center justify-center mb-1;
+  background: var(--gradient-main);
+  color: white;
+}
+
+.trust-text {
+  @apply text-xs text-gray-600;
+}
+
+/* Security Badge */
+.security-badge {
+  @apply fixed bottom-4 right-4 px-3 py-1.5 rounded-full flex items-center gap-2;
+  background: var(--gradient-success);
+  color: white;
+  font-size: 0.75rem;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Animations */
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.pulse-animation {
+  animation: pulse-soft 2s infinite;
+}
+
+/* Interactive States */
+.interactive-hover {
+  transition: all 0.2s ease;
+}
+
+.interactive-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Stat Cards */
+.stat-card {
+  @apply bg-white p-6 rounded-2xl shadow-lg flex items-center space-x-4 
+         transform hover:-translate-y-1 transition-all duration-300;
+}
+
+.stat-icon {
+  @apply w-12 h-12 rounded-full flex items-center justify-center bg-gray-50;
+}
+
+.stat-content {
+  @apply flex flex-col;
+}
+
+.stat-value {
+  @apply text-2xl font-bold text-gray-800;
+}
+
+.stat-label {
+  @apply text-sm text-gray-500;
+}
+
+/* Donation Type Button */
+.donation-type-button {
+  @apply relative px-6 py-3 rounded-xl text-white transition-all duration-300;
+}
+
+.donation-type-button.active {
+  @apply bg-white/20;
+}
+
+/* Amount Button */
+.amount-button {
+  @apply border-2 border-gray-200 hover:border-yellow-500 
+         transition-all duration-300 text-center;
+}
+
+.amount-button.active {
+  @apply border-yellow-500 bg-yellow-50;
+}
+
+/* Custom Amount Input */
+.custom-amount-input {
+  @apply border-2 border-gray-200 focus:border-yellow-500 
+         outline-none rounded-xl px-4 py-3 w-full transition-all duration-300;
+}
+
+/* Form Inputs */
+.form-input {
+  @apply w-full px-4 py-3 border-2 border-gray-200 rounded-xl 
+         focus:border-yellow-500 outline-none transition-all duration-300;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .stat-card {
+    @apply w-full;
+  }
+}
+
+/* Interactive Background */
+.floating-shape {
+  @apply absolute rounded-full opacity-20 animate-float;
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  filter: blur(40px);
+}
+
+.shape-1 {
+  width: 300px;
+  height: 300px;
+  top: 10%;
+  left: -5%;
+  animation: float 8s ease-in-out infinite;
+}
+
+.shape-2 {
+  width: 200px;
+  height: 200px;
+  top: 60%;
+  right: -5%;
+  animation: float 10s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+.shape-3 {
+  width: 150px;
+  height: 150px;
+  bottom: 10%;
+  left: 20%;
+  animation: float 12s ease-in-out infinite;
+  animation-delay: -4s;
+}
+
+.shape-4 {
+  width: 250px;
+  height: 250px;
+  top: 30%;
+  right: 20%;
+  animation: float 9s ease-in-out infinite;
+  animation-delay: -6s;
+}
+
+/* Light Effect */
+.light-effect {
+  @apply absolute inset-0 opacity-30;
+  background: radial-gradient(circle at 50% 50%, 
+              rgba(255,255,255,0.8), 
+              rgba(255,255,255,0.2));
+  animation: pulse 8s ease-in-out infinite;
+}
+
+/* Paw Print Trail */
+.paw-trail {
+  @apply absolute left-0 right-0 overflow-hidden;
+  height: 100vh;
+}
+
+.paw-print {
+  @apply absolute text-2xl opacity-0;
+  animation: pawAnimation 10s linear infinite;
+}
+
+/* Mouse Move Effect */
+.parallax-layer {
+  @apply absolute inset-0 transition-transform duration-300 ease-out;
+  will-change: transform;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { 
+    transform: translate(0, 0) rotate(0deg); 
+  }
+  25% { 
+    transform: translate(10px, -10px) rotate(5deg); 
+  }
+  50% { 
+    transform: translate(-5px, 15px) rotate(-5deg); 
+  }
+  75% { 
+    transform: translate(-15px, -5px) rotate(3deg); 
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes pawAnimation {
+  0% {
+    opacity: 0;
+    transform: translate(-100%, 100%) rotate(45deg);
+  }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% {
+    opacity: 0;
+    transform: translate(100%, -100%) rotate(45deg);
+  }
+}
+
+/* Responsive Design Improvements */
+@media (max-width: 768px) {
+  .floating-shape {
+    filter: blur(30px);
+  }
+  
+  .shape-1 { width: 200px; height: 200px; }
+  .shape-2 { width: 150px; height: 150px; }
+  .shape-3 { width: 100px; height: 100px; }
+  .shape-4 { width: 180px; height: 180px; }
+}
+
+@media (max-width: 480px) {
+  .floating-shape {
+    filter: blur(20px);
+  }
+  
+  .shape-1 { width: 150px; height: 150px; }
+  .shape-2 { width: 100px; height: 100px; }
+  .shape-3 { width: 80px; height: 80px; }
+  .shape-4 { width: 120px; height: 120px; }
+}
+
+/* Card Hover Effects */
+.donation-card {
+  @apply transition-all duration-300;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.donation-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Interactive Elements */
+.stat-card {
+  @apply backdrop-blur-sm bg-white/90;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px) rotateX(5deg);
+}
+
+.stat-icon {
+  @apply transition-transform duration-300;
+}
+
+.stat-card:hover .stat-icon {
+  transform: translateZ(20px);
+}
+
+/* Mouse Trail Effect */
+.mouse-trail {
+  @apply fixed pointer-events-none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,186,8,0.4) 0%, rgba(255,186,8,0) 70%);
+  animation: fadeOut 1s linear forwards;
+}
+
+@keyframes fadeOut {
+  to { transform: scale(2); opacity: 0; }
+}
+
+/* Desktop Optimizations */
+@media (min-width: 1024px) {
+  .container {
+    min-height: calc(100vh - 4rem);
+  }
+
+  .sticky {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .stat-card {
+    @apply p-6;
+  }
+
+  .donation-card {
+    max-width: none;
+  }
+}
+
+/* Enhanced Card Styling */
+.stat-card {
+  @apply bg-white/90 backdrop-blur-sm border border-gray-100 
+         hover:border-yellow-200 transition-all duration-300;
+}
+
+/* Improved Typography */
+h1 {
+  @apply tracking-tight;
+}
+
+/* Enhanced Animations */
+.floating-shape {
+  filter: blur(60px);
+  opacity: 0.15;
+}
+
+/* Improved Form Styling */
+.form-input:focus {
+  @apply ring-2 ring-yellow-100;
+}
+
+/* Better Button Interactions */
+.donation-type-button {
+  @apply hover:scale-105 active:scale-95;
+}

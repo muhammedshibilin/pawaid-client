@@ -1,0 +1,36 @@
+<!-- quick-ball.component.html -->
+<div
+  cdkDrag
+  cdkDragBoundary="body"
+  [cdkDragFreeDragPosition]="position"
+  [cdkDragConstrainPosition]="constrainPosition"
+  (cdkDragStarted)="onDragStarted($event)"
+  (cdkDragEnded)="onDragEnded($event)"
+  (cdkDragMoved)="onDragMoved($event)"
+  [@ballState]="state"
+  [ngClass]="containerClasses"
+  [ngStyle]="{
+    'left.px': position.x,
+    'top.px': position.y,
+    'touch-action': 'none',
+    'transform-origin': 'center center'
+  }"
+  (mouseenter)="onHover(true)"
+  (mouseleave)="onHover(false)"
+  (click)="onBallClick($event)"
+>
+  <label [for]="inputId" [class]="labelClasses">
+    <span class="camera-icon" [@iconRotate]="state">📸</span>
+    <div 
+      class="upload-text-container"
+      [class.left-full]="!isOnRightSide"
+      [class.right-full]="isOnRightSide"
+      [class.opacity-0]="!isExpanded"
+      [class.opacity-100]="isExpanded"
+    >
+      <span class="upload-text">
+        help me <span class="animal-icon">🐾</span>
+      </span>
+    </div>
+  </label>
+</div>

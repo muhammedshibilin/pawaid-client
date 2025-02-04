@@ -1,0 +1,87 @@
+
+<div class="bg-white shadow-md px-6 top-10  py-2 fixed top-4 right-4 left-[calc(16rem+1rem)] transition-all duration-300 rounded-lg" [class.left-[calc(2rem+1rem)]="!isExpanded">
+    <div class="flex items-center justify-between">
+      <!-- Search Section -->
+      <div class="relative flex-1 max-w-lg">
+        <div class="relative">
+          <input
+  type="text"
+  placeholder="Search..."
+  class="w-full pl-4 pr-12 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#539FBF] focus:ring-1 focus:ring-[#539FBF]"
+  (input)="onSearch($event)"
+/>
+          <button
+            class="absolute right-0 top-0 h-full px-4 text-gray-600 hover:text-[#539FBF] transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+  
+      <!-- Right Section -->
+      <div class="flex items-center space-x-6 ml-4">
+        <!-- Calendar Section -->
+        <div class="flex items-center text-gray-700">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
+          <span class="ml-2 text-sm">
+            {{ currentDate | date:'EEE, MMM d, y' }}
+          </span>
+        </div>
+  
+        <!-- Message Icon -->
+        <button class="relative text-gray-700 hover:text-[#539FBF] transition-colors">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
+          </svg>
+          <!-- Message Badge -->
+          <span class="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
+            3
+          </span>
+        </button>
+  
+        <!-- Profile Section -->
+        <div class="flex items-center"(click)="navigateToProfile()">
+          <div class="w-10 h-10 rounded-full bg-[#539FBF] text-white flex items-center justify-center">
+            <span class="text-sm font-semibold">A</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

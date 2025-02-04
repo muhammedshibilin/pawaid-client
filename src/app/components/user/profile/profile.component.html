@@ -1,0 +1,242 @@
+<div class="min-h-screen bg-gradient-to-br from-yellow-50 via-orange-50 to-amber-50">
+  <!-- Main Container -->
+  <div class="container mx-auto px-4 py-8">
+    <!-- Top Profile Section -->
+    <div class="flex flex-col md:flex-row gap-6 mb-8">
+      <!-- Left Profile Card -->
+      <div class="w-full md:w-2/3 space-y-6">
+        <!-- Main Profile Card -->
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+          <!-- Cover Image with Pattern -->
+          <div class="h-48 bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 relative overflow-hidden">
+            <div class="absolute inset-0 bg-pattern opacity-10"></div>
+            <!-- Decorative Elements -->
+            <div class="absolute top-4 right-4 w-20 h-20 bg-white/10 rounded-full blur-2xl"></div>
+            <div class="absolute bottom-4 left-4 w-16 h-16 bg-white/10 rounded-full blur-xl"></div>
+          </div>
+        
+          <!-- Profile Info -->
+          <div class="relative px-8 pb-8">
+            <!-- Avatar -->
+            <div class="absolute -top-16 left-8">
+              <div class="w-32 h-32 rounded-2xl bg-white p-2 shadow-2xl transform -rotate-3 hover:rotate-0 transition-all duration-300">
+                <div class="w-full h-full rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center overflow-hidden">
+                  <span class="text-4xl text-white font-bold animate-scaleIn">
+                    {{ profile?.username?.charAt(0).toUpperCase() }}
+                  </span>
+                </div>
+              </div>
+            </div>
+        
+            <!-- User Details -->
+            <div class="ml-44 pt-3">
+              <div class="flex items-center justify-between space-x-4">
+                <div>
+                  <h1 class="text-3xl font-bold text-gray-800 animate-fadeIn">
+                    {{ profile?.username || 'Loading...' }}
+                  </h1>
+                  <p class="text-gray-500 flex items-center mt-1">
+                    <i class="fas fa-calendar-alt mr-2 text-yellow-500"></i>
+                    Member since {{ profile?.createdAt | date:'mediumDate' }}
+                  </p>
+                </div>
+                <!-- Active Member Label -->
+                <span class="px-4 py-1.5 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">
+                  Active Member
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+
+
+        <!-- Notification Card -->
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+          <div class="p-6 bg-gradient-to-r from-yellow-500 to-orange-500">
+            <div class="flex items-center justify-between">
+              <h2 class="text-xl font-bold text-white">Notifications</h2>
+              <button (click)="toggleNotificationBar()"
+                class="relative p-2 hover:bg-white/10 rounded-xl transition-colors duration-300">
+                <i class="fas fa-bell text-white text-xl"></i>
+                <span
+                  class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
+                  {{ notifications.length }}
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Notification Categories Tabs -->
+          <div class="flex space-x-4 border-b " [class.hidden]="!this.showNotifications">
+            <div *ngFor="let category of notificationCategories; let i = index" (click)="selectCategory(i)"
+              class="cursor-pointer px-4 py-2" [class.bg-gray-200]="selectedCategoryIndex === i">
+              <i [class]="category.icon + ' text-gray-600'"></i>
+              <span class="font-medium">    {{category.name }}</span>
+            </div>
+          </div>
+
+          <!-- Notifications List -->
+          <div class="divide-y divide-gray-100" [class.hidden]="!this.showNotifications">
+            <div *ngFor="let notification of selectedCategory.notifications"
+              class="p-4 hover:bg-gray-50 transition-colors duration-300 cursor-pointer flex justify-between items-center">
+              <div class="flex items-start space-x-4">
+                <div class="p-3 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-xl">
+                  <i [class]="notification.icon + 'text-yellow-600 text-lg'"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-800">{{ notification.title }}</p>
+                  <p class="text-xs text-gray-500 mt-1">{{ notification.time | date:'shortTime' }}</p>
+                </div>
+              </div>
+              <button *ngIf="selectedCategory.name === 'Registrations'&&selectCategory.length>0"
+                (click)="verifyUser(notification.id, notification.role!)"
+                class="px-3 py-1 bg-green-500 text-white rounded-md text-sm">
+                Verify
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="w-full md:w-1/3 space-y-6">
+
+        <!-- Profile Details Card -->
+        <div class="bg-white rounded-3xl shadow-xl p-4">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+              <i class="fas fa-user-circle text-yellow-500 mr-3"></i>
+              Profile Information
+            </h2>
+            <button (click)="toggleProfileInfo()"
+              class="p-2 hover:bg-yellow-50 rounded-xl transition-colors duration-300">
+              <i class="fas fa-cog text-gray-600 text-lg 
+                  transform transition-transform duration-300" [class.rotate-180]="showProfileInfo"></i>
+            </button>
+          </div>
+
+          <div *ngIf="!profile" class="animate-pulse space-y-4">
+            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+          </div>
+
+          <div *ngIf="profile && showProfileInfo" class="space-y-4 animate-fadeIn">
+            <!-- Email -->
+            <div class="transform hover:-translate-y-1 transition-all duration-300">
+              <div class="flex flex-col sm:flex-row sm:items-center p-2 bg-gradient-to-r 
+                            from-yellow-50 to-orange-50 rounded-2xl border border-yellow-100">
+                <div class="flex items-center space-x-4 sm:w-1/3">
+                  <div class="p-1 bg-yellow-500 bg-opacity-10 rounded-xl">
+                    <i class="fas fa-envelope text-yellow-600 text-xl"></i>
+                  </div>
+                  <span class="text-gray-600">Email</span>
+                </div>
+                <span class="text-gray-800 sm:w-2/3 mt-2 sm:mt-0 font-medium">
+                  {{ profile.email }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="transform hover:-translate-y-1 transition-all duration-300">
+              <div class="flex flex-col sm:flex-row sm:items-center p-2 bg-gradient-to-r 
+                            from-orange-50 to-yellow-50 rounded-2xl border border-orange-100">
+                <div class="flex items-center space-x-4 sm:w-1/3">
+                  <div class="p-1 bg-orange-500 bg-opacity-10 rounded-xl">
+                    <i class="fas fa-phone text-orange-600 text-xl"></i>
+                  </div>
+                  <span class="text-gray-600">Phone</span>
+                </div>
+                <span class="text-gray-800 sm:w-2/3 mt-2 sm:mt-0 font-medium">
+                  {{ profile.phone || 'Not provided' }}
+                </span>
+              </div>
+            </div>
+
+       <!-- Notifications Toggle -->
+<div class="transform hover:-translate-y-1 transition-all duration-300">
+  <div class="flex flex-col sm:flex-row sm:items-center p-2 bg-gradient-to-r 
+              from-blue-50 to-indigo-50 rounded-2xl border border-blue-100">
+    <div class="flex items-center space-x-4 sm:w-1/3">
+      <div class="p-1 bg-blue-500 bg-opacity-10 rounded-xl">
+        <i class="fas fa-bell text-blue-600 text-xl"></i>
+      </div>
+      <span class="text-gray-600">Notifications</span>
+      <span class="text-gray-400 font-medium">
+        {{ notificationsEnabled ? 'Enabled' : 'Disabled' }}
+      </span>
+    </div>
+    <div class="sm:w-2/3 mt-2 sm:mt-0 flex justify-between items-center">
+      <div class="ml-auto">
+        <button (click)="enableNotifications()" 
+                class="relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 focus:outline-none"
+                [class.bg-blue-600]="notificationsEnabled" 
+                [class.bg-gray-300]="!notificationsEnabled">
+          <span class="sr-only">Toggle notifications</span>
+          <span class="inline-block w-4 h-4 transform transition-transform duration-300 bg-white rounded-full"
+                [class.translate-x-6]="notificationsEnabled"
+                [class.translate-x-1]="!notificationsEnabled"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+            <!-- Profile Actions -->
+            <div class="flex flex-col space-y-3 pt-4">
+              <button (click)="editProfile()" class="flex items-center justify-center space-x-2 px-4 py-3 
+                         bg-yellow-50 text-yellow-700 rounded-xl hover:bg-yellow-100 
+                         transition-colors duration-300 border border-yellow-200">
+                <i class="fas fa-edit"></i>
+                <span>Edit Profile</span>
+              </button>
+
+              <button (click)="resetPassword()" class="flex items-center justify-center space-x-2 px-4 py-3 
+                         bg-orange-50 text-orange-700 rounded-xl hover:bg-orange-100 
+                         transition-colors duration-300 border border-orange-200">
+                <i class="fas fa-key"></i>
+                <span>Reset Password</span>
+              </button>
+            
+            </div>
+               <!-- Logout Button -->
+               <div class="">
+                <button (click)="logout()"
+                  class="ml-auto group relative inline-flex px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+                  <span
+                    class="absolute w-64 h-64 mt-12 group-hover:-mt-24 transition-all duration-500 ease-in-out -translate-x-20 -translate-y-32 bg-orange-600 rotate-45"></span>
+                  <span class="relative flex items-center">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    <span class="font-semibold">Logout</span>
+                  </span>
+                </button>
+              </div>
+          </div>
+
+
+        </div>
+        <!-- Quick Stats Card -->
+        <div class="bg-white rounded-3xl shadow-xl p-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Stats</h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="p-4 bg-yellow-50 rounded-2xl text-center">
+              <div class="text-yellow-600 text-2xl font-bold">12</div>
+              <div class="text-sm text-gray-600">Donations</div>
+            </div>
+            <div class="p-4 bg-orange-50 rounded-2xl text-center">
+              <div class="text-orange-600 text-2xl font-bold">3</div>
+              <div class="text-sm text-gray-600">Messages</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-navbar></app-navbar>

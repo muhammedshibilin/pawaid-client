@@ -1,0 +1,27 @@
+.hero-section {
+  min-height: 80vh;
+  padding:0;
+  background: linear-gradient(to bottom, #ffffff, #f3f4f6);
+}
+
+.service-section {
+  padding: 2rem 0;
+  background: #ffffff;
+}
+
+.feature-section {
+  padding: 2rem 0;
+  background: #f9fafb;
+}
+
+/* Animation classes */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease-out;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}

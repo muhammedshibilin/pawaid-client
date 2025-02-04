@@ -1,0 +1,25 @@
+<nav class="fixed bottom-0 left-0 right-0 z-50 flex justify-center transition-all duration-300 ease-in-out transform"
+     [class.translate-y-28]="!isNavbarVisible"
+     [class.mb-6]="isNavbarVisible">
+  <div class="bg-gradient-to-r from-white to-yellow-500 h-16 rounded-full shadow-lg max-w-xl mx-auto flex items-center px-8 relative">
+    <div class="absolute -left-8">
+      <img 
+        [src]="logoPath" 
+        alt="logo image" 
+        class="h-24 w-24 object-contain" 
+      />
+    </div>
+
+    <div class="flex justify-around items-center w-full pl-20">
+      <a 
+        *ngFor="let item of navbarItems"
+        class="text-gray-700 hover:text-yellow-600 transition-colors duration-300 flex flex-col items-center px-4"
+        [routerLink]="item.link"
+        [class.hidden]="!shouldShowItem(item)"
+      >
+      <fa-icon [icon]="item.icon"></fa-icon>
+        <span class="text-xs mt-1">{{ item.text }}</span>
+      </a>
+    </div>
+  </div>
+</nav>

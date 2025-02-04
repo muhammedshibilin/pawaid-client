@@ -1,0 +1,43 @@
+
+@import "@fortawesome/fontawesome-free/css/all.css";
+@import "aos/dist/aos.css";
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0px); }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+.toast {
+
+  max-height: 30px !important; /* Adjust height */
+  padding: 8px 12px !important; /* Adjust padding inside the toastr */
+  font-size: 14px !important;   /* Adjust font size if needed */
+}
+
+/* Adjust the top margin for the notification */
+.toast-top-center {
+  top: 20px !important; /* Reduce this value to move it upwards */
+}

@@ -1,0 +1,175 @@
+<div class="min-h-screen bg-gradient-to-br from-emerald-100 via-emerald-50 to-teal-100 flex flex-col lg:flex-row relative">
+  <!-- Add decorative background elements -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute top-0 left-0 w-96 h-96 bg-emerald-300/20 rounded-full mix-blend-multiply filter blur-xl"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-teal-300/20 rounded-full mix-blend-multiply filter blur-xl"></div>
+    <div class="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-400/20 rounded-full mix-blend-multiply filter blur-xl"></div>
+  </div>
+
+  <!-- Left Side - Welcome Section -->
+  <div class="hidden lg:flex w-2/3 relative overflow-hidden">
+    <div class="absolute top-20 right-20 w-64 h-64 bg-emerald-300/20 rounded-full animate-pulse-slow"></div>
+    <div class="absolute bottom-20 left-20 w-72 h-72 bg-teal-300/20 rounded-full animate-pulse-slow delay-150"></div>
+    
+    <div class="w-full h-full flex items-center justify-center relative z-10">
+      <div class="text-center space-y-6 animate-fadeInSlide max-w-xl px-8">
+        <h1 class="text-6xl font-bold leading-tight drop-shadow-lg">
+          <span class="text-blue-900">Welcome to</span>
+          <span class="block mt-2 animated-gradient-text">PawAid</span>
+        </h1>
+        <p class="text-xl text-blue-800 leading-relaxed">Your trusted platform for pet care and services. Join our community of pet lovers and professionals.</p>
+        
+        <!-- Feature Points -->
+        <div class="grid grid-cols-2 gap-6 mt-12">
+          <div class="flex items-center space-x-3 text-left hover:transform hover:scale-105 transition-all duration-300 bg-white/40 p-4 rounded-2xl backdrop-blur-sm">
+            <div class="p-3 bg-blue-100 rounded-xl">
+              <fa-icon [icon]="faPaw" class="text-blue-600 text-xl"></fa-icon>
+            </div>
+            <p class="text-blue-800 font-medium">Expert Pet Care Services</p>
+          </div>
+          <div class="flex items-center space-x-3 text-left hover:transform hover:scale-105 transition-all duration-300 bg-white/40 p-4 rounded-2xl backdrop-blur-sm">
+            <div class="p-3 bg-emerald-100 rounded-xl">
+              <fa-icon [icon]="faUserMd" class="text-emerald-600 text-xl"></fa-icon>
+            </div>
+            <p class="text-emerald-800 font-medium">Professional Veterinarians</p>
+          </div>
+        </div>
+
+        <!-- Additional Features -->
+        <div class="mt-12 space-y-6">
+          <p class="text-2xl text-blue-800 font-medium italic">"Providing the best care for your beloved pets"</p>
+          <div class="flex justify-center gap-8">
+            <div class="flex items-center space-x-2 bg-white/40 px-6 py-3 rounded-xl backdrop-blur-sm">
+              <fa-icon [icon]="faCheckCircle" class="text-blue-600 text-xl"></fa-icon>
+              <span class="text-blue-800 font-medium">24/7 Support</span>
+            </div>
+            <div class="flex items-center space-x-2 bg-white/40 px-6 py-3 rounded-xl backdrop-blur-sm">
+              <fa-icon [icon]="faShieldAlt" class="text-emerald-500 text-xl"></fa-icon>
+              <span class="text-emerald-800 font-medium">Trusted Service</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side - Login Form -->
+  <div class="w-full lg:w-2/5 flex items-center  justify-center p-8 relative z-10 ">
+    <div class="w-full max-w-lg mx-4">
+      <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl overflow-hidden border border-emerald-100">
+        <div class="mb-6 bg-gradient-to-r from-emerald-300 to-teal-200 rounded-t-2xl -mx-2 px-6 py-7 flex items-center justify-between border-b border-emerald-200 shadow-sm">
+          <div class="flex-grow">
+            <h2 class="text-2xl font-bold text-emerald-900 leading-tight flex items-center gap-2 mb-2">
+              Welcome Back! 
+              <fa-icon [icon]="faPaw" class="text-emerald-700 animate-bounce text-base"></fa-icon>
+            </h2>
+            <p class="text-emerald-800 text-sm flex items-center gap-2">
+              <fa-icon [icon]="faUserCircle" class="text-emerald-600 text-base"></fa-icon>
+              Sign in as 
+              <span class="font-medium bg-white/90 px-3 py-1 rounded-full text-emerald-800 shadow-sm border border-emerald-100">
+                {{ selectedUserType }}
+              </span>
+            </p>
+          </div>
+          
+          <div class="flex-shrink-0 ml-6">
+            <img src="assets/user/images/logo.png" alt="Logo" 
+                 class="h-16 w-16 object-contain drop-shadow-2xl transform -rotate-12 hover:rotate-0 transition-transform duration-300"/>
+          </div>
+        </div>
+
+        <div class="px-8 pb-6">
+          <!-- User Type Selection -->
+          <div class="mb-6">
+            <div class="grid grid-cols-4 gap-2">
+              <ng-container *ngFor="let type of userTypes">
+                <button 
+                  (click)="selectUserType(type)"
+                  [ngClass]="{
+                    'bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg': selectedUserType === type,
+                    'bg-emerald-50 hover:bg-emerald-100': selectedUserType !== type
+                  }"
+                  class="px-3 py-2.5 rounded-xl border border-emerald-200 transition-all duration-300 flex flex-col items-center justify-center gap-1.5">
+                  <fa-icon 
+                    [icon]="getUserTypeIcon(type)" 
+                    [class]="selectedUserType === type ? 'text-white' : 'text-emerald-600'"
+                  ></fa-icon>
+                  <span class="text-xs font-medium truncate" [class.text-white]="selectedUserType === type" [class.text-emerald-700]="selectedUserType !== type">
+                    {{type}}
+                  </span>
+                </button>
+              </ng-container>
+            </div>
+          </div>
+
+          <!-- Login Form -->
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+            <!-- Email Field -->
+            <div class="relative group">
+              <input
+                type="email"
+                formControlName="email"
+                placeholder="Email"
+                class="w-full px-5 py-3 rounded-xl border border-emerald-200 bg-emerald-50/50 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all duration-300 outline-none text-emerald-800 placeholder-emerald-400"
+                [class.border-red-300]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+              />
+            </div>
+
+            <!-- Password Field -->
+            <div class="relative group">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                formControlName="password"
+                placeholder="Password"
+                class="w-full px-5 py-3 rounded-xl border border-emerald-200 bg-emerald-50/50 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all duration-300 outline-none text-emerald-800 placeholder-emerald-400"
+                [class.border-red-300]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+              />
+              <button 
+                type="button"
+                (click)="togglePasswordVisibility()"
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 text-emerald-400 hover:text-emerald-500">
+                <fa-icon [icon]="showPassword ? faEyeSlash : faEye"></fa-icon>
+              </button>
+            </div>
+
+            <!-- Google Sign In -->
+            <button 
+              type="button"
+              (click)="signInWithGoogle()"
+              class="w-full px-5 py-3 rounded-xl border border-emerald-200 bg-white hover:bg-emerald-50 transition-all duration-300 flex items-center justify-center space-x-3 group">
+              <fa-icon [icon]="faGoogle"></fa-icon>
+              <span class="text-emerald-700 font-medium group-hover:text-emerald-800">Continue with Google</span>
+            </button>
+          
+            <!-- Login Button -->
+            <button
+              type="submit"
+              [disabled]="loginForm.invalid"
+              class="w-full px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium hover:from-emerald-600 hover:to-teal-600 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none">
+              <span class="flex items-center justify-center space-x-2">
+                <fa-icon [icon]="faSignInAlt"></fa-icon>
+                <span>Login</span>
+              </span>
+            </button>
+          </form>
+
+          <!-- Footer Links -->
+          <div class="mt-4 text-center space-y-3 bg-emerald-50/50 py-4 px-8 rounded-b-2xl border-t border-emerald-100">
+            <a (click)="navigateToVerifyEmail()"
+               class="text-emerald-600 hover:text-emerald-700 cursor-pointer text-sm flex items-center justify-center space-x-2 group">
+              <fa-icon [icon]="faKey" class="text-xs group-hover:rotate-12 transition-transform duration-300"></fa-icon>
+              <span>Forgot Password?</span>
+            </a>
+            <p class="text-emerald-600 text-sm">
+              Don't have an account? 
+              <a (click)="navigateToRegister()"
+                 class="text-emerald-700 hover:text-emerald-800 font-medium hover:underline">
+                Sign up
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

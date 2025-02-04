@@ -1,0 +1,10 @@
+<app-topbar (searchEvent)="onSearch($event)"></app-topbar>
+<app-sidebar (itemSelected)="onSidebarItemSelected($event)"></app-sidebar>
+<app-table 
+  [tableData]="filteredData"
+  [tableTitle]="currentTableTitle"
+  [headers]="currentHeaders"
+  [pageSize]="5"
+  [showActions]="true"
+  (blockAction)="handleBlockAction($event)">
+</app-table>

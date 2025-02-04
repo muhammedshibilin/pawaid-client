@@ -1,0 +1,198 @@
+/* quick-ball.component.css */
+.quick-ball-container {
+    @apply overflow-visible fixed z-50;
+    will-change: transform, width;
+    position: fixed !important;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    transform-origin: center center;
+    pointer-events: auto;
+}
+
+/* Only animate width during drag */
+.quick-ball-container.cdk-drag-dragging {
+    transition: none !important; /* Remove transition during drag for precise movement */
+    cursor: grabbing !important;
+    will-change: transform;
+}
+
+/* Smooth snap after drag */
+.quick-ball-container:not(.cdk-drag-dragging) {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.upload-label {
+    @apply flex items-center justify-center gap-2 w-full h-full text-white cursor-pointer px-4;
+}
+  
+.camera-icon {
+    @apply text-xl min-w-[20px] text-yellow-800;
+    display: inline-block;
+    transform-origin: center center;
+}
+  
+.upload-text {
+    @apply text-xs text-yellow-900 font-medium;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0 auto;
+    letter-spacing: 0.15em;
+}
+  
+/* Smooth edge transition */
+.quick-ball-container {
+    transition: transform 0.3s ease-out, width 0.3s ease-out, left 0.3s ease-out;
+}
+  
+/* Enhanced bounce animation */
+@keyframes bounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+  
+.bounce {
+    animation: bounce 0.4s cubic-bezier(0.36, 0, 0.66, -0.56);
+}
+  
+/* Floating animation */
+@keyframes float {
+    0% { transform: translateY(0px) scale(1); }
+    50% { transform: translateY(-3px) scale(1); }
+    100% { transform: translateY(0px) scale(1); }
+}
+
+.quick-ball-container:not(.cdk-drag-dragging):not(:hover) {
+    animation: float 2s ease-in-out infinite;
+}
+  
+/* Shadow and hover effects */
+.quick-ball-container {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+  
+.quick-ball-container:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+  
+/* Pulse animation for camera icon */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.camera-icon:not(.cdk-drag-dragging) {
+    animation: pulse 2s ease-in-out infinite;
+}
+  
+
+/* Typing animation */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink {
+  50% { border-color: transparent }
+}
+
+.upload-text-container {
+  @apply absolute whitespace-nowrap transition-all duration-300 pointer-events-none;
+  transform: translateY(-50%);
+  top: 50%;
+}
+
+/* Add typing animation when text becomes visible */
+.upload-text-container.opacity-100 .upload-text {
+  animation: typing 0.8s steps(20, end);
+}
+
+/* Remove the cursor-related styles */
+.upload-text-container.opacity-0 .upload-text {
+  opacity: 0;
+}
+
+/* Adjust text container position */
+.upload-text-container.left-full {
+  left: calc(100% + 12px);
+}
+
+.upload-text-container.right-full {
+  right: calc(100% + 12px);
+}
+
+/* Remove any scale transforms from previous version */
+.upload-text-container.opacity-100 {
+  opacity: 1;
+  transform: translateY(-50%);
+}
+
+.upload-text-container.opacity-0 {
+  opacity: 0;
+  transform: translateY(-50%);
+}
+
+/* Update container transitions */
+.quick-ball-container {
+  @apply overflow-visible;
+}
+
+/* Adjust the text animation */
+.upload-text-container {
+  opacity: 0;
+  transform: translateY(-50%) translateX(0);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.upload-text-container.opacity-100 {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.upload-text-container.opacity-0 {
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Remove any unused animations and styles */
+
+/* Add these new styles */
+
+.animal-icon {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 14px;
+}
+
+/* Bounce animation for animal icon */
+@keyframes bounce-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.upload-text-container.opacity-100 .animal-icon {
+  animation: 
+    appear 0.3s ease-out 1s forwards,  /* Appears after typing */
+    bounce-gentle 1s ease-in-out infinite 1.3s;  /* Starts bouncing after appearing */
+  opacity: 0;
+}
+
+@keyframes appear {
+  from { 
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Adjust typing animation to stop before the icon */
+.upload-text-container.opacity-100 .upload-text {
+  animation: typing 0.8s steps(20, end);
+  width: auto;
+}

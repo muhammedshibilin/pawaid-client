@@ -1,0 +1,42 @@
+<section class="bg-gradient-to-br from-white to-yellow-500 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <!-- Left Content -->
+      <div class="space-y-8">
+        <div>
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            Making Tails Wag & <span class="text-yellow-600">Hearts Happy</span>
+          </h1>
+          <p class="text-lg text-gray-600 leading-relaxed">
+            We're dedicated to providing the best care for your furry friends. Every pet deserves a loving home and quality care, and we're here to make that happen.
+          </p>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-6">
+          <div *ngFor="let stat of stats" class="text-center">
+            <div class="text-3xl font-bold text-yellow-600">{{ stat.value }}</div>
+            <div class="text-sm text-gray-600">{{ stat.label }}</div>
+          </div>
+        </div>
+
+        <!-- CTA Button -->
+        <div>
+          <button class="bg-yellow-500 hover:bg-yellow-400 text-white font-semibold py-3 px-8 rounded-full transition-colors duration-300 flex items-center space-x-2">
+            <span>Book an Appointment</span>
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Image -->
+      <div class="image-container overflow-hidden rounded-2xl shadow-xl">
+        <img 
+          src="assets/user/images/happy-dog-actively-playing-fetch-game-outdoor-on-sunny-day.webp" 
+          alt="Happy Dog" 
+          class="w-full h-[500px] object-cover"
+        >
+      </div>
+    </div>
+  </div>
+</section> 

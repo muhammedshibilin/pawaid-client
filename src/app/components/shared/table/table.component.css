@@ -1,0 +1,194 @@
+/* Enhanced Table Styles */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  position: relative;
+  background: linear-gradient(to right, white 30%, rgba(255, 255, 255, 0.8));
+  border-radius: 15px;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+}
+
+th {
+  background: linear-gradient(145deg, #f9fafb, #f3f4f6);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+th:hover {
+  background: linear-gradient(145deg, #f3f4f6, #e5e7eb);
+  transform: translateY(-1px);
+}
+
+th::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #10b981, transparent);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+th:hover::after {
+  transform: scaleX(1);
+}
+
+/* Enhanced Row Animations */
+tr {
+  transition: all 0.3s ease;
+}
+
+tr:hover {
+  transform: translateX(5px) scale(1.01);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced Status Badge */
+.status-badge {
+  @apply px-3 py-1 text-xs font-medium rounded-full;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.status-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: translateX(-100%);
+}
+
+.status-badge:hover::before {
+  transform: translateX(100%);
+  transition: transform 0.6s ease;
+}
+
+/* Enhanced Pagination */
+.pagination-button {
+  @apply w-10 h-10 rounded-full flex items-center justify-center text-gray-600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(145deg, #ffffff, #f3f4f6);
+  box-shadow: 3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff;
+}
+
+.pagination-button:not(.disabled):hover {
+  @apply text-emerald-600;
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 8px #e5e7eb, -4px -4px 8px #ffffff;
+}
+
+.pagination-button.disabled {
+  @apply opacity-50 cursor-not-allowed;
+  box-shadow: none;
+}
+
+/* Loading Animation */
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1.2); opacity: 0; }
+}
+
+.loading-spinner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #10b981;
+  animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+/* Empty State Animation */
+@keyframes bounce-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.empty-state-icon {
+  animation: bounce-soft 2s ease-in-out infinite;
+}
+
+/* Sort Button Enhancement */
+.sort-button {
+  @apply relative overflow-hidden;
+  background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+  box-shadow: 3px 3px 6px #e2e8f0, -3px -3px 6px #ffffff;
+}
+
+.sort-button:hover {
+  @apply transform -translate-y-0.5;
+  box-shadow: 4px 4px 8px #e2e8f0, -4px -4px 8px #ffffff;
+}
+
+/* Table Cell Animations */
+td {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+td::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 1px;
+  background: #10b981;
+  transition: all 0.3s ease;
+}
+
+tr:hover td::after {
+  width: 100%;
+  left: 0;
+}
+
+/* Action Button Enhancement */
+.action-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.action-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: translateX(-100%);
+}
+
+.action-button:hover::before {
+  transform: translateX(100%);
+  transition: transform 0.6s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .table-responsive {
+    @apply -mx-4;
+  }
+  
+  .pagination-container {
+    @apply px-4;
+  }
+}
+  

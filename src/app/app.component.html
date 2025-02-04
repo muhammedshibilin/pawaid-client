@@ -1,0 +1,11 @@
+<router-outlet></router-outlet>
+
+<app-quick-ball 
+  *ngIf="!hideQuickBall"
+  (openModal)="showUploadModal()">
+</app-quick-ball>
+
+<app-upload 
+*ngIf="isModalOpen$ | async"
+(closeModalEvent)="hideUploadModal()">
+</app-upload>
