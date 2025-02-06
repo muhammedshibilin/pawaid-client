@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../../core/services/user.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { GoogleService } from '../../../core/services/base/google.service';
 import { ToastrService } from 'ngx-toastr';
 import { AdminService } from '../../../core/services/admin/admin.service';
 import { DoctorService } from '../../../core/services/doctor/doctor.service';
@@ -26,6 +25,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { NotificationService } from '../../../core/services/notification.service';
+import { GoogleService } from '../../../core/services/all/google.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 
 @Component({
@@ -69,7 +70,8 @@ export class LoginComponent {
     private doctorService: DoctorService,
     private recruiterService: RecruiterService,
     private notificationService:NotificationService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private jwtHelper:JwtHelperService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -123,7 +125,7 @@ export class LoginComponent {
             return
           }
           this.notificationService.requestPermission()
-          console.log('responseseef ',response)
+          console.log('responseseef ',response,this.jwtHelper.decodeToken(response.data))
           localStorage.setItem('accessToken', response.data);
           localStorage.setItem('userType', this.selectedUserType.toLowerCase());
           const toast = this.toastr.success(response.message, 'Success', {

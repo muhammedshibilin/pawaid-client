@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, switchMap, catchError, throwError, of, tap } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { ToastrService } from 'ngx-toastr';
-import { AllService } from '../services/base/all.service';
+import { AllService } from '../services/all/all.service';
 
 export const blockCheckInterceptor: HttpInterceptorFn = (
   req: HttpRequest<any>, 

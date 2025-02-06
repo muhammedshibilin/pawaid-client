@@ -45,7 +45,8 @@
             "styles": [
               "src/styles.css",
               "node_modules/aos/dist/aos.css",
-              "node_modules/ngx-toastr/toastr.css"
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/leaflet/dist/leaflet.css"
             ],
             "scripts": [],
             "serviceWorker": true,
@@ -121,7 +122,8 @@
             "styles": [
               "src/styles.css",
               "node_modules/aos/dist/aos.css",
-              "node_modules/ngx-toastr/toastr.css"
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/leaflet/dist/leaflet.css"
             ],
             "scripts": []
           }

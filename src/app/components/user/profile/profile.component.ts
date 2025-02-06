@@ -7,7 +7,6 @@ import { ToastrService } from 'ngx-toastr';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Router } from '@angular/router';
 import { AdminService } from '../../../core/services/admin/admin.service';
-import { faL } from '@fortawesome/free-solid-svg-icons';
 import { DoctorService } from '../../../core/services/doctor/doctor.service';
 import { RecruiterService } from '../../../core/services/recruiter/recruiter.service';
 
@@ -123,6 +122,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.role = this.authService.getRole() ?? '';
+    console.log('role isisss',this.role)
     this.updateNotifications();
     this.getProfile();
     this.notificationsEnabled = localStorage.getItem('notificationsEnabled') === 'true';

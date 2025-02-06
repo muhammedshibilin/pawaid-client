@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AllService } from '../../../core/services/base/all.service';
+import { AllService } from '../../../core/services/all/all.service';
 
 @Component({
   selector: 'app-verify-email',

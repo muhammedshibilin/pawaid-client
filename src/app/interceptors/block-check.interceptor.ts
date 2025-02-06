@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, switchMap, catchError, throwError, of, tap } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { ToastrService } from 'ngx-toastr';
-import { AllService } from '../core/services/base/all.service';
+import { AllService } from '../core/services/all/all.service';
 
 export const blockCheckInterceptor: HttpInterceptorFn = (
   req: HttpRequest<any>, 
@@ -15,10 +15,12 @@ export const blockCheckInterceptor: HttpInterceptorFn = (
     '/find-user',
     '/login',
     '/register',
-    '/refresh-token'
+    '/refresh-token',
+    '/otp',
+    '/verify-email'
   ];
 
-  if (skipUrls.some(url => req.url.includes(url))) {
+  if (skipUrls.some(url => req.url.includes(url)||req.url.startsWith(''))) {
     return next(req);
   }
 

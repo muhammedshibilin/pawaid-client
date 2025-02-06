@@ -16,17 +16,10 @@ import { provideMessaging, getMessaging } from '@angular/fire/messaging';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
+import { environment } from './environments/environment.development';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
-
-export const firebaseConfig = {
-  apiKey: "AIzaSyAKE1WChof2dlwR-vRXvEBDN7ibbK4myZM",
-  authDomain: "pawaid-956b3.firebaseapp.com",
-  projectId: "pawaid-956b3",
-  storageBucket: "pawaid-956b3.firebasestorage.app",
-  messagingSenderId: "332134958469",
-  appId: "1:332134958469:web:749f0652705fc06c8370ec",
-  measurementId: "G-BLN56L76YC"
-};
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/firebase-messaging-sw.js', { scope: '/' })
@@ -47,10 +40,12 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes),
     provideHttpClient(withInterceptors([blockCheckInterceptor, authInterceptor])),
     CookieService,
-    provideFirebaseApp(() => initializeApp(firebaseConfig)), // Initialize Firebase App
-    provideAuth(() => getAuth()), // Initialize Firebase Auth
-    provideMessaging(() => getMessaging()), // Initialize Firebase Messaging
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideAuth(() => getAuth()),
+    provideMessaging(() => getMessaging()), 
     JwtHelperService,
+    GoogleMapsModule,
+    LeafletModule,
     DragDropModule,
     importProvidersFrom(FontAwesomeModule),
     provideToastr({
