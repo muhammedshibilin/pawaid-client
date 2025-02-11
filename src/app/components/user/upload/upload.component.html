@@ -82,22 +82,6 @@
       </div>
   
       <div class="space-y-4">
-        <button 
-          (click)="getLocation()" 
-          class="flex items-center justify-center space-x-3 px-4 py-4 
-                 bg-yellow-400 text-white rounded-xl hover:bg-yellow-500 
-                 transition-all w-full shadow-md group"
-        >
-          <fa-icon [icon]="faMapMarkerAlt" 
-            class="text-xl group-hover:bounce"></fa-icon>
-          <span class="font-medium">Get Location</span>
-        </button>
-          <div *ngIf="location" 
-          class="text-sm bg-green-50 p-2 rounded-xl flex items-center border border-green-200">
-          <fa-icon [icon]="faMapMarkerAlt" class="mr-3 text-green-600"></fa-icon>
-          <span class="text-green-800">Location captured successfully</span>
-        </div>
-  
         <!-- Submit Button -->
         <button 
           (click)="submit()" 

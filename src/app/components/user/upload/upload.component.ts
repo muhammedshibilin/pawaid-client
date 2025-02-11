@@ -5,6 +5,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCamera, faMapMarkerAlt, faTimes, faCameraRotate, faRotateRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
 import { UploadService } from '../../../core/services/upload.service';
+import { environment } from '../../../../environments/environment.development';
+import piexif from 'piexifjs';
 
 @Component({
   selector: 'app-upload',
@@ -26,7 +28,6 @@ export class UploadComponent {
   location: { latitude: number; longitude: number } | null = null;
   currentCamera: 'user' | 'environment' = 'environment'; 
   
-  // Font Awesome icons
   faCamera = faCamera;
   faMapMarkerAlt = faMapMarkerAlt;
   faTimes = faTimes;
@@ -49,7 +50,6 @@ export class UploadComponent {
       }
 
       try {
-        // First attempt with specified facing mode
         this.stream = await navigator.mediaDevices.getUserMedia({
           video: {
             facingMode: facingMode
@@ -59,7 +59,6 @@ export class UploadComponent {
         console.warn('Failed to get specified camera, trying fallback options...');
         
         try {
-          // Try to get front camera specifically
           this.stream = await navigator.mediaDevices.getUserMedia({
             video: {
               facingMode: 'user'
@@ -67,7 +66,6 @@ export class UploadComponent {
           });
           this.currentCamera = 'user';
         } catch (frontCameraError) {
-          // If front camera fails, try any available camera
           this.stream = await navigator.mediaDevices.getUserMedia({
             video: true
           });
@@ -79,7 +77,6 @@ export class UploadComponent {
         this.videoElement.nativeElement.srcObject = this.stream;
         await this.videoElement.nativeElement.play();
         this.isCameraOn = true;
-        // Update currentCamera only if the initial requested camera was successful
         if (this.stream.getVideoTracks()[0].getSettings().facingMode === facingMode) {
           this.currentCamera = facingMode;
         }
@@ -94,13 +91,11 @@ export class UploadComponent {
     }
   }
 
-  // Helper method to check available cameras
   async checkAvailableCameras(): Promise<MediaDeviceInfo[]> {
     const devices = await navigator.mediaDevices.enumerateDevices();
     return devices.filter(device => device.kind === 'videoinput');
   }
 
-  // Modified switchCamera method to handle fallbacks
   async switchCamera() {
     const cameras = await this.checkAvailableCameras();
     
@@ -116,19 +111,7 @@ export class UploadComponent {
 
 
 
-  captureImage() {
-    if (!this.isCameraOn) return;
-    
-    const video = this.videoElement.nativeElement;
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d')?.drawImage(video, 0, 0);
-    this.capturedImage = canvas.toDataURL('image/jpeg');
-    
-    this.stopCamera();
-  }
-
+ 
   retakePhoto(){
     this.capturedImage = null;
     this.startCamera();
@@ -143,46 +126,119 @@ export class UploadComponent {
     this.isCameraOn = false;
   }
 
-  getLocation() {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.location = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          };
-         },
-        (error) => {
-          console.error('Error getting location:', error);
-          alert('Could not get location');
-        }
-      );
-    } else {
-      alert('Geolocation is not supported by your browser');
-    }
-  }
 
 
   isValid(): boolean {
     return this.title.trim().length > 0 && !!this.capturedImage;
   }
-  submit() {
-    if (this.isValid()) {
-      // Create FormData object
+ 
+  async captureImage() {
+    if (!this.isCameraOn) return;
+    
+    try {
+
+      const response = await fetch(`https://ipgeolocation.abstractapi.com/v1/?api_key=${environment.Geolocation}`);
+      const ipInfo = await response.json();
+      console.log('Abstract API Location:', ipInfo);
+      
+      if (ipInfo && ipInfo.latitude && ipInfo.longitude) {
+        this.location = {
+          latitude: ipInfo.latitude,
+          longitude: ipInfo.longitude
+        };
+  
+        // 2. Capture image and immediately create blob with EXIF
+        const video = this.videoElement.nativeElement;
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          throw new Error('Could not get canvas context');
+        }
+        
+        ctx.drawImage(video, 0, 0);
+        
+        // Convert canvas to Blob and add EXIF data
+        canvas.toBlob(async (blob) => {
+          if (!blob) {
+            throw new Error('Failed to create blob');
+          }
+  
+          // Convert Blob to binary string
+          const reader = new FileReader();
+          reader.onloadend = async () => {
+            const binary = reader.result as string;
+            
+            // Create EXIF data
+            const exifData = {
+              "0th": {},
+              "Exif": {},
+              "GPS": {
+                0: [2, 2, 0, 0], // GPSVersionID
+                1: ipInfo.latitude >= 0 ? "N" : "S", // GPSLatitudeRef
+                2: this.convertToDegreesMinutesSeconds(Math.abs(ipInfo.latitude)), // GPSLatitude
+                3: ipInfo.longitude >= 0 ? "E" : "W", // GPSLongitudeRef
+                4: this.convertToDegreesMinutesSeconds(Math.abs(ipInfo.longitude)) // GPSLongitude
+              }
+            };
+  
+            // Add EXIF to image using piexif.js
+            const exifBytes = piexif.dump(exifData);
+            const newJpeg = piexif.insert(exifBytes, binary);
+            
+            // Store both the image and location
+            this.capturedImage = newJpeg;
+            console.log('EXIF data added:', exifData);
+            
+            // Verify EXIF data
+            const exifObj = piexif.load(this.capturedImage);
+            console.log('Verified EXIF data:', exifObj);
+          };
+  
+          reader.readAsDataURL(blob);
+        }, 'image/jpeg', 1.0);
+      }
+      this.stopCamera()
+    } catch (error) {
+      console.error('Error capturing image with geotag:', error);
+    }
+  }
+  
+  private convertToDegreesMinutesSeconds(decimal: number): Array<[number, number]> {
+    const degrees = Math.floor(decimal);
+    const minutesFloat = (decimal - degrees) * 60;
+    const minutes = Math.floor(minutesFloat);
+    const seconds = Math.round((minutesFloat - minutes) * 60 * 100);
+    
+    return [
+      [degrees, 1],
+      [minutes, 1],
+      [seconds, 100]
+    ];
+  }
+
+async submit() {
+  if (this.isValid()) {
+    try {
       const formData = new FormData();
       
-      // Convert base64 image to blob
-      const imageBlob = this.dataURItoBlob(this.capturedImage!);
-      const imageFile = new File([imageBlob], `capture-${Date.now()}.jpg`, { type: 'image/jpeg' });
-  
-      // Append all data
+      // Convert captured image to Blob
+      const imageBlob = await this.base64ToBlob(this.capturedImage!);
+      const imageFile = new File([imageBlob], `animalreport-${Date.now()}.jpg`, { 
+        type: 'image/jpeg',
+        lastModified: Date.now()
+      });
+      
+      // Append image, title, and location to form data
       formData.append('title', this.title.trim());
       formData.append('image', imageFile);
       formData.append('location', JSON.stringify(this.location));
-  
+      
       this.uploadService.uploadReport(formData).subscribe({
         next: (response) => {
-          console.log('Response:', response);
+          console.log('Upload Response:', response);
           this.toastr.success('Data submitted successfully', 'Success');
           this.closeModal();
         },
@@ -191,23 +247,24 @@ export class UploadComponent {
           this.toastr.error('Failed to submit data', 'Error');
         },
       });
+    } catch (error) {
+      console.error('Error preparing upload:', error);
+      this.toastr.error('Error preparing upload', 'Error');
     }
   }
+}
+
+private async base64ToBlob(base64String: string): Promise<Blob> {
+  const base64 = base64String.replace(/^data:image\/\w+;base64,/, '');
+  const binaryString = atob(base64);
+  const bytes = new Uint8Array(binaryString.length);
   
-  // Helper function to convert base64 to blob
-  private dataURItoBlob(dataURI: string): Blob {
-    const byteString = atob(dataURI.split(',')[1]);
-    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-    
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-  
-    return new Blob([ab], { type: mimeString });
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
   }
+  
+  return new Blob([bytes], { type: 'image/jpeg' });
+}
 
 
   closeModal() {

@@ -239,7 +239,7 @@ fetchUnverifiedUsers(commonCategory: NotificationCategory): void {
     profileRequest.subscribe({
       next: (response) => {
         console.log('Profile data received:', response);
-        this.profile = response.data; // Assign data dynamically
+        this.profile = response.data; 
         this.toastr.success('Profile fetched successfully!', 'Success');
       },
       error: (err) => {

@@ -74,11 +74,8 @@ export class NotificationService {
 
   listenForMessages() {
     onMessage(this.messaging, (payload) => {
-
         this.toastr.info(payload.notification?.body, payload.notification?.title);
-
         if (payload.data?.['redirectUrl']) {
-          // Trigger a redirect when the notification is clicked
           this.handleRedirect(payload.data?.['redirectUrl']);
         }
       });

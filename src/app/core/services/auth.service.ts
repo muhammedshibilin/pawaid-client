@@ -14,7 +14,7 @@ export class AuthService {
     isLoggedIn(): boolean {
         return !!localStorage.getItem('accessToken'); 
     }
-
+                                        
       getRole(): string | null {
         const token = localStorage.getItem('accessToken');
         console.log('token in get role',token)

@@ -11,6 +11,7 @@ export const environment = {
         measurementId: "G-BLN56L76YC"
     },
     api:'http://localhost:4040',
-    locationIq:'pk.b2ae1ce671113f02189554f60ea536d6'
+    locationIq:'pk.b2ae1ce671113f02189554f60ea536d6',
+    Geolocation:'6766aff117984922b58201c123774f1d'
 
 };
