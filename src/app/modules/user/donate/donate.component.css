@@ -23,7 +23,7 @@
 
 /* Main Container */
 .container {
-  @apply min-h-screen p-4;
+  @apply min-h-screen p-24;
   background: linear-gradient(45deg, #F3F4F6, #FFFFFF);
 }
 

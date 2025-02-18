@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { TopbarComponent } from '../../../components/admin/topbar/topbar.component';
-import { SidebarComponent } from '../../../components/admin/sidebar/sidebar.component';
-import { TableComponent } from '../../../components/shared/table/table.component';
-import { User } from '../../../core/models/user.interface';
-import { Doctor } from '../../../core/models/doctor.interface';
-import { Recruiter } from '../../../core/models/recruiter.interface';
-import { AdminUserService } from '../../../core/services/admin/admin-user.service';
-import { AdminDoctorService } from '../../../core/services/admin/admin-doctor.service';
-import { AdminRecruiterService } from '../../../core/services/admin/admin-recruiter.service';
+import { TopbarComponent } from '../topbar/topbar.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { TableComponent } from '../../../../components/shared/table/table.component';
+import { User } from '../../../../core/models/user.interface';
+import { Doctor } from '../../../../core/models/doctor.interface';
+import { Recruiter } from '../../../../core/models/recruiter.interface';
+import { AdminUserService } from '../../../../core/services/admin/admin-user.service';
+import { AdminDoctorService } from '../../../../core/services/admin/admin-doctor.service';
+import { AdminRecruiterService } from '../../../../core/services/admin/admin-recruiter.service';
 
 
 @Component({

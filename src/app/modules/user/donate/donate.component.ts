@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { NavbarComponent } from '../../shared/navbar/navbar.component';
+import { NavbarComponent } from '../../../components/shared/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../../environments/environment.development';
+import { StripePaymentComponent } from '../../common/stripe-payment/stripe-payment.component';
 
 interface DonationOption {
   amount: number;
@@ -12,8 +14,7 @@ type DonationType = 'monthly' | 'one-time';
 
 @Component({
   selector: 'app-donate',
-  standalone: true,
-  imports: [NavbarComponent, CommonModule, FormsModule],
+  imports: [NavbarComponent, CommonModule, FormsModule,StripePaymentComponent],
   templateUrl: './donate.component.html',
   styleUrls: ['./donate.component.css']
 })
@@ -25,6 +26,8 @@ export class DonateComponent implements OnInit {
   donorName: string = '';
   donorEmail: string = '';
   businessName: string = '';
+  stripe: any;
+  card: any;
 
   donationOptions: DonationOption[] = [
     { amount: 500, label: '₹500' },
@@ -45,8 +48,7 @@ export class DonateComponent implements OnInit {
     { icon: 'fas fa-clock', text: '24/7 Support' }
   ];
 
-  private hoverSound: HTMLAudioElement;
-  private focusSound: HTMLAudioElement;
+ 
 
   dogGifUrl: string = 'https://tenor.com/view/cute-dog-puppy-smile-gif-15999912';
   dancingDogGifUrl: string = 'https://tenor.com/view/dog-dance-dancing-dog-gif-18865060';
@@ -57,24 +59,28 @@ export class DonateComponent implements OnInit {
   private mouseTrail: HTMLDivElement[] = [];
 
   constructor() {
-    this.hoverSound = new Audio('assets/sounds/hover.mp3');
-    this.focusSound = new Audio('assets/sounds/focus.mp3');
+   
   }
 
   ngOnInit() {
     this.initializeParticles();
     this.setupMouseTrail();
+    this.stripe = Stripe(environment.stripe_pk);
+    const elements = this.stripe.elements();
+    this.card = elements.create('card');
+    this.card.mount('#card-element');
+  }
+  onSubmit(event: Event) {
+    event.preventDefault();
+    this.stripe.createToken(this.card).then((result: { error: { message: any; }; token: any; }) => {
+      if (result.error) {
+        console.error(result.error.message);
+      } else {
+        console.log(result.token);
+      }
+    });
   }
 
-  playHoverSound() {
-    this.hoverSound.currentTime = 0;
-    this.hoverSound.play();
-  }
-
-  playInputFocusSound() {
-    this.focusSound.currentTime = 0;
-    this.focusSound.play();
-  }
 
   getDonationTypeClass(type: string): string {
     const baseClass = 'donation-type-button';
@@ -141,12 +147,6 @@ export class DonateComponent implements OnInit {
     return this.isDogDancing ? this.dancingDogGifUrl : this.dogGifUrl;
   }
 
-  toggleDogDance() {
-    this.isDogDancing = !this.isDogDancing;
-    if (this.isDogDancing) {
-      this.playHoverSound();
-    }
-  }
 
   getDonationTypeIcon(type: string): string {
     return type === 'monthly' ? 'fas fa-sync-alt' : 'fas fa-hand-holding-usd';

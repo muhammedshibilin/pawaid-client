@@ -12,6 +12,8 @@ export const environment = {
     },
     api:'http://localhost:4040',
     locationIq:'pk.b2ae1ce671113f02189554f60ea536d6',
-    Geolocation:'6766aff117984922b58201c123774f1d'
+    Geolocation:'6766aff117984922b58201c123774f1d',
+    stripe_pk:'pk_test_51QrKp4SJ8W19blIstM2PnQFMqbAQ6SHqneZR4CGmSsSZhzv8WyhXS2aI4mkXnayCBTnu3AOtU7AdwjQPLy4fNgH900NEpGzDir',
+    stripe_sk:'sk_test_51QrKp4SJ8W19blIs1HvaUZvbj8h1U15NziGqKSnwhtpEHsXKkeOiTtwKxUhOOJEuUG3gEYe7xMZR9WkwPHzw7Ulk00WOWl8zbB'
 
 };

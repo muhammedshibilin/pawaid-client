@@ -15,10 +15,12 @@ export const blockCheckInterceptor: HttpInterceptorFn = (
     '/find-user',
     '/login',
     '/register',
-    '/refresh-token'
+    '/refresh-token',
+    '/otp',
+    '/verify-email'
   ];
 
-  if (skipUrls.some(url => req.url.includes(url))) {
+  if (skipUrls.some(url => req.url.includes(url)||req.url.startsWith(''))) {
     return next(req);
   }
 

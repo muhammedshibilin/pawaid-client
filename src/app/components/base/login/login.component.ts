@@ -27,6 +27,7 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { NotificationService } from '../../../core/services/notification.service';
 import { GoogleService } from '../../../core/services/all/google.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { AppComponent } from '../../../app.component';
 
 
 @Component({
@@ -35,7 +36,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   imports: [
     ReactiveFormsModule, 
     CommonModule, 
-    FontAwesomeModule
+    FontAwesomeModule,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
@@ -71,7 +72,8 @@ export class LoginComponent {
     private recruiterService: RecruiterService,
     private notificationService:NotificationService,
     private toastr: ToastrService,
-    private jwtHelper:JwtHelperService
+    private jwtHelper:JwtHelperService,
+    private appComponent:AppComponent
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -114,7 +116,7 @@ export class LoginComponent {
       const loginObserver = {
         next: (response: any) => {
           if (response.status == 201) {
-            const toast = this.toastr.error(response.message, 'error', {
+              const toast = this.toastr.error(response.message, 'error', {
               timeOut: 2000,
               progressBar: true
             });
@@ -122,6 +124,13 @@ export class LoginComponent {
               localStorage.setItem('user_id', response.data._id)
               this.router.navigate(['/otp'])
             })
+            return
+          }
+          if(response.status == 404){
+            const toast = this.toastr.error(response.message, 'error', {
+              timeOut: 2000,
+              progressBar: true
+            });
             return
           }
           this.notificationService.requestPermission()

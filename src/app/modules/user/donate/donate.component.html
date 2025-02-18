@@ -1,27 +1,7 @@
-<div class="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-white relative overflow-hidden">
-  <!-- Interactive Background Elements -->
-  <div class="fixed inset-0 pointer-events-none">
-    <!-- Animated Shapes -->
-    <div class="absolute w-full h-full">
-      <div class="floating-shape shape-1"></div>
-      <div class="floating-shape shape-2"></div>
-      <div class="floating-shape shape-3"></div>
-      <div class="floating-shape shape-4"></div>
-      <!-- Paw Print Trail -->
-      <div class="paw-trail">
-        <div *ngFor="let i of [1,2,3,4,5]" 
-          class="paw-print" 
-          [style.animation-delay]="i * 0.5 + 's'">
-          🐾
-        </div>
-      </div>
-    </div>
-    <!-- Light Effect -->
-    <div class="light-effect"></div>
-  </div>
 
+<div class="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-white relative overflow-hidden">
   <!-- Main Content with Parallax Effect -->
-  <div class="container mx-auto px-4 py-12 relative z-10" #container>
+  <div class="container py-12 relative z-10" #container>
     <!-- Two Column Layout for Desktop -->
     <div class="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto">
       <!-- Left Column - Motivational Content -->
@@ -169,6 +149,7 @@
                 </div>
               </div>
             </div>
+            <app-stripe-payment></app-stripe-payment>
 
             <!-- Submit Button -->
             <button (click)="handleDonation()"

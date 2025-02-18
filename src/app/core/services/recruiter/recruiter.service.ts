@@ -29,4 +29,16 @@ export class RecruiterService {
     return this.http.get(`${environment.api}/recruiter/profile`,{withCredentials:true});
   }
 
+  fetchRescueAlertsForRecruiter(recruiterId:string):Observable<any> {
+    console.log('calll reachd in recruiter service ',recruiterId)
+    const url = `${environment.api}/recruiter/rescue-alert/${recruiterId}`;
+    return this.http.get<any>(url);
+  }
+
+  acceptRescueAlert(animalReportId:string,recruiterId:string):Observable<any>{
+    const url = `${environment.api}/recruiter/accept-rescue`;
+    return this.http.post<any>(url,{animalReportId,recruiterId});
+
+  }
+
 }

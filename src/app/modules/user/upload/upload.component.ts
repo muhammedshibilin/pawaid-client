@@ -134,76 +134,101 @@ export class UploadComponent {
  
   async captureImage() {
     if (!this.isCameraOn) return;
-    
+  
     try {
-
-      const response = await fetch(`https://ipgeolocation.abstractapi.com/v1/?api_key=${environment.Geolocation}`);
-      const ipInfo = await response.json();
-      console.log('Abstract API Location:', ipInfo);
+      // Get the location from the device using GPS
+      const position = await this.getLocationFromGPS();
       
-      if (ipInfo && ipInfo.latitude && ipInfo.longitude) {
-        this.location = {
-          latitude: ipInfo.latitude,
-          longitude: ipInfo.longitude
-        };
+      if (!position) {
+        throw new Error('Unable to retrieve location');
+      }
   
-        // 2. Capture image and immediately create blob with EXIF
-        const video = this.videoElement.nativeElement;
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          throw new Error('Could not get canvas context');
+      this.location = {
+        latitude: position.latitude,
+        longitude: position.longitude
+      };
+  
+      console.log('Device Location:', this.location);
+  
+      // Proceed with image capturing
+      const video = this.videoElement.nativeElement;
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+  
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        throw new Error('Could not get canvas context');
+      }
+  
+      ctx.drawImage(video, 0, 0);
+  
+      // Convert canvas to Blob and add EXIF data
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          throw new Error('Failed to create blob');
         }
-        
-        ctx.drawImage(video, 0, 0);
-        
-        // Convert canvas to Blob and add EXIF data
-        canvas.toBlob(async (blob) => {
-          if (!blob) {
-            throw new Error('Failed to create blob');
-          }
   
-          // Convert Blob to binary string
-          const reader = new FileReader();
-          reader.onloadend = async () => {
-            const binary = reader.result as string;
-            
-            // Create EXIF data
-            const exifData = {
-              "0th": {},
-              "Exif": {},
-              "GPS": {
-                0: [2, 2, 0, 0], // GPSVersionID
-                1: ipInfo.latitude >= 0 ? "N" : "S", // GPSLatitudeRef
-                2: this.convertToDegreesMinutesSeconds(Math.abs(ipInfo.latitude)), // GPSLatitude
-                3: ipInfo.longitude >= 0 ? "E" : "W", // GPSLongitudeRef
-                4: this.convertToDegreesMinutesSeconds(Math.abs(ipInfo.longitude)) // GPSLongitude
-              }
-            };
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          const binary = reader.result as string;
   
-            // Add EXIF to image using piexif.js
-            const exifBytes = piexif.dump(exifData);
-            const newJpeg = piexif.insert(exifBytes, binary);
-            
-            // Store both the image and location
-            this.capturedImage = newJpeg;
-            console.log('EXIF data added:', exifData);
-            
-            // Verify EXIF data
-            const exifObj = piexif.load(this.capturedImage);
-            console.log('Verified EXIF data:', exifObj);
+          // Create EXIF data
+          const exifData = {
+            "0th": {},
+            "Exif": {},
+            "GPS": {
+              0: [2, 2, 0, 0], // GPSVersionID
+              1: this.location!.latitude >= 0 ? "N" : "S", // GPSLatitudeRef
+              2: this.convertToDegreesMinutesSeconds(Math.abs(this.location!.latitude)), // GPSLatitude
+              3: this.location!.longitude >= 0 ? "E" : "W", // GPSLongitudeRef
+              4: this.convertToDegreesMinutesSeconds(Math.abs(this.location!.longitude)) // GPSLongitude
+            }
           };
   
-          reader.readAsDataURL(blob);
-        }, 'image/jpeg', 1.0);
-      }
-      this.stopCamera()
+          // Add EXIF to image using piexif.js
+          const exifBytes = piexif.dump(exifData);
+          const newJpeg = piexif.insert(exifBytes, binary);
+  
+          // Store both the image and location
+          this.capturedImage = newJpeg;
+          console.log('EXIF data added:', exifData);
+  
+          // Verify EXIF data
+          const exifObj = piexif.load(this.capturedImage);
+          console.log('Verified EXIF data:', exifObj);
+        };
+  
+        reader.readAsDataURL(blob);
+      }, 'image/jpeg', 1.0);
+  
+      this.stopCamera();
     } catch (error) {
       console.error('Error capturing image with geotag:', error);
     }
+  }
+  
+  // Function to get location from GPS
+  async getLocationFromGPS(): Promise<{ latitude: number, longitude: number } | null> {
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            resolve({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            });
+          },
+          (error) => {
+            console.error('Error getting GPS location:', error);
+            reject('Unable to retrieve location');  // Reject if GPS fails
+          }
+        );
+      } else {
+        console.error('Geolocation is not supported by this browser.');
+        reject('Geolocation not supported');  // Reject if geolocation is not supported
+      }
+    });
   }
   
   private convertToDegreesMinutesSeconds(decimal: number): Array<[number, number]> {

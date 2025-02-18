@@ -14,20 +14,22 @@
             <div class="absolute top-4 right-4 w-20 h-20 bg-white/10 rounded-full blur-2xl"></div>
             <div class="absolute bottom-4 left-4 w-16 h-16 bg-white/10 rounded-full blur-xl"></div>
           </div>
-        
+
           <!-- Profile Info -->
           <div class="relative px-8 pb-8">
             <!-- Avatar -->
             <div class="absolute -top-16 left-8">
-              <div class="w-32 h-32 rounded-2xl bg-white p-2 shadow-2xl transform -rotate-3 hover:rotate-0 transition-all duration-300">
-                <div class="w-full h-full rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center overflow-hidden">
+              <div
+                class="w-32 h-32 rounded-2xl bg-white p-2 shadow-2xl transform -rotate-3 hover:rotate-0 transition-all duration-300">
+                <div
+                  class="w-full h-full rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center overflow-hidden">
                   <span class="text-4xl text-white font-bold animate-scaleIn">
                     {{ profile?.username?.charAt(0).toUpperCase() }}
                   </span>
                 </div>
               </div>
             </div>
-        
+
             <!-- User Details -->
             <div class="ml-44 pt-3">
               <div class="flex items-center justify-between space-x-4">
@@ -48,7 +50,7 @@
             </div>
           </div>
         </div>
-        
+
 
 
         <!-- Notification Card -->
@@ -68,33 +70,69 @@
           </div>
 
           <!-- Notification Categories Tabs -->
-          <div class="flex space-x-4 border-b " [class.hidden]="!this.showNotifications">
+          <div class="flex space-x-4 border-b" [class.hidden]="!this.showNotifications">
             <div *ngFor="let category of notificationCategories; let i = index" (click)="selectCategory(i)"
-              class="cursor-pointer px-4 py-2" [class.bg-gray-200]="selectedCategoryIndex === i">
+              class="cursor-pointer px-4 py-2 rounded-lg mb-2 mt-2 ml-2 "
+              [class.bg-gray-200]="selectedCategoryIndex === i">
               <i [class]="category.icon + ' text-gray-600'"></i>
-              <span class="font-medium">    {{category.name }}</span>
+              <span class="font-medium">{{category.name}}</span>
             </div>
           </div>
 
           <!-- Notifications List -->
           <div class="divide-y divide-gray-100" [class.hidden]="!this.showNotifications">
-            <div *ngFor="let notification of selectedCategory.notifications"
-              class="p-4 hover:bg-gray-50 transition-colors duration-300 cursor-pointer flex justify-between items-center">
-              <div class="flex items-start space-x-4">
-                <div class="p-3 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-xl">
-                  <i [class]="notification.icon + 'text-yellow-600 text-lg'"></i>
+            <!-- Show message when no notifications -->
+            <div *ngIf="!selectedCategory?.notifications?.length" class="p-4 text-center text-gray-500">
+              <i class="fas fa-inbox text-4xl mb-2"></i>
+              <p>No notifications in this category</p>
+            </div>
+
+            <!-- Show notifications when they exist -->
+            <ng-container *ngIf="selectedCategory?.notifications?.length">
+              <div *ngFor="let notification of selectedCategory.notifications"
+                class="p-4 hover:bg-gray-50 transition-colors duration-300 cursor-pointer flex justify-between items-center">
+                <div class="flex items-start space-x-4">
+                  <div class="p-3 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-xl">
+                    <i [class]="notification.icon + 'text-yellow-600 text-lg'"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-gray-800">{{notification.title }}</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ notification.time | date:'shortTime' }}</p>
+                  </div>
                 </div>
-                <div>
-                  <p class="text-sm font-medium text-gray-800">{{ notification.title }}</p>
-                  <p class="text-xs text-gray-500 mt-1">{{ notification.time | date:'shortTime' }}</p>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-2">
+                  <button *ngIf="selectedCategory.name === 'Registrations'"
+                    (click)="verifyUser(notification.id, notification.role!)"
+                    class="px-3 py-1 bg-green-500 text-white rounded-md text-sm">
+                    Verify
+                  </button>
+
+                  <!-- Accept Button - Displayed if status is 'pending' -->
+                  <button *ngIf="selectedCategory.name === 'Rescue Alerts' && notification.status === 'pending'"
+                    (click)="acceptRescue(notification.id)"
+                    class="px-3 py-1 bg-green-500 text-white rounded-md text-sm">
+                    Accept
+                  </button>
+
+                  <!-- Picked Button - Displayed if status is 'accepted' -->
+                  <button *ngIf="selectedCategory.name === 'Rescue Alerts' && notification.status === 'accepted'"
+                    class="px-3 py-1 bg-gray-500 text-white rounded-md text-sm">
+                    Picked
+                  </button>
+
+                  <!-- Drive Button - Displayed if status is 'accepted' and location is available -->
+                  <button
+                    *ngIf="selectedCategory.name === 'Rescue Alerts' && notification.status === 'accepted' && notification.location"
+                    (click)="startDrive(notification.location!)"
+                    class="px-3 py-1 bg-blue-500 text-white rounded-md text-sm">
+                    Drive
+                  </button>
+
                 </div>
               </div>
-              <button *ngIf="selectedCategory.name === 'Registrations'&&selectCategory.length>0"
-                (click)="verifyUser(notification.id, notification.role!)"
-                class="px-3 py-1 bg-green-500 text-white rounded-md text-sm">
-                Verify
-              </button>
-            </div>
+            </ng-container>
           </div>
 
         </div>
@@ -157,34 +195,34 @@
               </div>
             </div>
 
-       <!-- Notifications Toggle -->
-<div class="transform hover:-translate-y-1 transition-all duration-300">
-  <div class="flex flex-col sm:flex-row sm:items-center p-2 bg-gradient-to-r 
+            <!-- Notifications Toggle -->
+            <div class="transform hover:-translate-y-1 transition-all duration-300">
+              <div class="flex flex-col sm:flex-row sm:items-center p-2 bg-gradient-to-r 
               from-blue-50 to-indigo-50 rounded-2xl border border-blue-100">
-    <div class="flex items-center space-x-4 sm:w-1/3">
-      <div class="p-1 bg-blue-500 bg-opacity-10 rounded-xl">
-        <i class="fas fa-bell text-blue-600 text-xl"></i>
-      </div>
-      <span class="text-gray-600">Notifications</span>
-      <span class="text-gray-400 font-medium">
-        {{ notificationsEnabled ? 'Enabled' : 'Disabled' }}
-      </span>
-    </div>
-    <div class="sm:w-2/3 mt-2 sm:mt-0 flex justify-between items-center">
-      <div class="ml-auto">
-        <button (click)="enableNotifications()" 
-                class="relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 focus:outline-none"
-                [class.bg-blue-600]="notificationsEnabled" 
-                [class.bg-gray-300]="!notificationsEnabled">
-          <span class="sr-only">Toggle notifications</span>
-          <span class="inline-block w-4 h-4 transform transition-transform duration-300 bg-white rounded-full"
-                [class.translate-x-6]="notificationsEnabled"
-                [class.translate-x-1]="!notificationsEnabled"></span>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+                <div class="flex items-center space-x-4 sm:w-1/3">
+                  <div class="p-1 bg-blue-500 bg-opacity-10 rounded-xl">
+                    <i class="fas fa-bell text-blue-600 text-xl"></i>
+                  </div>
+                  <span class="text-gray-600">Notifications</span>
+                  <span class="text-gray-400 font-medium">
+                    {{ notificationsEnabled ? 'Enabled' : 'Disabled' }}
+                  </span>
+                </div>
+                <div class="sm:w-2/3 mt-2 sm:mt-0 flex justify-between items-center">
+                  <div class="ml-auto">
+                    <button (click)="enableNotifications()"
+                      class="relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 focus:outline-none"
+                      [class.bg-blue-600]="notificationsEnabled" [class.bg-gray-300]="!notificationsEnabled">
+                      <span class="sr-only">Toggle notifications</span>
+                      <span
+                        class="inline-block w-4 h-4 transform transition-transform duration-300 bg-white rounded-full"
+                        [class.translate-x-6]="notificationsEnabled"
+                        [class.translate-x-1]="!notificationsEnabled"></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
 
 
@@ -203,20 +241,20 @@
                 <i class="fas fa-key"></i>
                 <span>Reset Password</span>
               </button>
-            
+
             </div>
-               <!-- Logout Button -->
-               <div class="">
-                <button (click)="logout()"
-                  class="ml-auto group relative inline-flex px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
-                  <span
-                    class="absolute w-64 h-64 mt-12 group-hover:-mt-24 transition-all duration-500 ease-in-out -translate-x-20 -translate-y-32 bg-orange-600 rotate-45"></span>
-                  <span class="relative flex items-center">
-                    <i class="fas fa-sign-out-alt mr-2"></i>
-                    <span class="font-semibold">Logout</span>
-                  </span>
-                </button>
-              </div>
+            <!-- Logout Button -->
+            <div class="">
+              <button (click)="logout()"
+                class="ml-auto group relative inline-flex px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+                <span
+                  class="absolute w-64 h-64 mt-12 group-hover:-mt-24 transition-all duration-500 ease-in-out -translate-x-20 -translate-y-32 bg-orange-600 rotate-45"></span>
+                <span class="relative flex items-center">
+                  <i class="fas fa-sign-out-alt mr-2"></i>
+                  <span class="font-semibold">Logout</span>
+                </span>
+              </button>
+            </div>
           </div>
 
 

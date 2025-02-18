@@ -18,7 +18,8 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { environment } from './environments/environment.development';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { StripeModule } from 'stripe-angular';
+import { NgxStripeModule, provideNgxStripe } from 'ngx-stripe';
 
 
 if ('serviceWorker' in navigator) {
@@ -45,9 +46,10 @@ bootstrapApplication(AppComponent, {
     provideMessaging(() => getMessaging()), 
     JwtHelperService,
     GoogleMapsModule,
-    LeafletModule,
     DragDropModule,
-    importProvidersFrom(FontAwesomeModule),
+    NgxStripeModule,
+    provideNgxStripe(environment.stripe_pk),
+    importProvidersFrom([FontAwesomeModule,StripeModule]),
     provideToastr({
       positionClass: 'toast-top-center',
       preventDuplicates: true,

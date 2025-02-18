@@ -11,12 +11,12 @@ import { ResetPasswordComponent } from './components/base/reset-password/reset-p
 export const routes: Routes = [
   { 
     path: 'admin', 
-    loadChildren: () => import('./components/admin/admin.module')
+    loadChildren: () => import('./modules/admin/admin.module')
       .then(m => m.AdminModule)
   },
   { 
     path: '', 
-    loadChildren: () => import('./components/user/user.module')
+    loadChildren: () => import('./modules/user/user.module')
       .then(m => m.UserModule)
   },
   {path:'login',component:LoginComponent,canActivate:[preventAuthGuard]},
