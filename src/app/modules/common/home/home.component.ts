@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavbarComponent } from '../../shared/navbar/navbar.component';
-import { FooterComponent } from '../../shared/footer/footer.component';
+import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { ServiceShowcaseComponent } from './service-showcase/service-showcase.component';
 import { FeatureHighlightComponent } from './feature-highlight/feature-highlight.component';
 import { HappyPetsComponent } from './happy-pets/happy-pets.component';

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { TopbarComponent } from '../topbar/topbar.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { TableComponent } from '../../../../components/shared/table/table.component';
+import { TableComponent } from '../../../shared/components/table/table.component';
 import { User } from '../../../../core/models/user.interface';
 import { Doctor } from '../../../../core/models/doctor.interface';
 import { Recruiter } from '../../../../core/models/recruiter.interface';

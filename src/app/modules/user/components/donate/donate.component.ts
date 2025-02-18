@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { NavbarComponent } from '../../../components/shared/navbar/navbar.component';
+import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { environment } from '../../../../environments/environment.development';
-import { StripePaymentComponent } from '../../common/stripe-payment/stripe-payment.component';
+import { environment } from '../../../../../environments/environment.development';
+import { StripePaymentComponent } from '../../../common/stripe-payment/stripe-payment.component';
 
 interface DonationOption {
   amount: number;

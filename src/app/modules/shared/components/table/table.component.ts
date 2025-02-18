@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as AOS from 'aos';
-import { FirstLetterCapitalPipe } from '../../../core/pipes/first-letter-capital.pipe';
+import { FirstLetterCapitalPipe } from '../../../../core/pipes/first-letter-capital.pipe';
 
 @Component({
   selector: 'app-table',

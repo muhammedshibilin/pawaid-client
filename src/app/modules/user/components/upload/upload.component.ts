@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCamera, faMapMarkerAlt, faTimes, faCameraRotate, faRotateRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
-import { UploadService } from '../../../core/services/upload.service';
-import { environment } from '../../../../environments/environment.development';
+import { UploadService } from '../../../../core/services/upload.service';
+import { environment } from '../../../../../environments/environment.development';
 import piexif from 'piexifjs';
 
 @Component({

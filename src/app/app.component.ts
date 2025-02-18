@@ -3,12 +3,12 @@ import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { filter, Observable } from 'rxjs';
 import { NotificationService } from './core/services/notification.service';
 import { UploadService } from './core/services/upload.service';
-import { AuthService } from './modules/user/services/auth.service';
+import { AuthService } from './modules/user/components/services/auth.service';
 import { io } from 'socket.io-client';
 import { environment } from '../environments/environment.development';
 import { CommonModule } from '@angular/common';
-import { QuickBallComponent } from './components/base/quick-ball/quick-ball.component';
-import { UploadComponent } from './modules/user/upload/upload.component';
+import { QuickBallComponent } from './modules/user/components/quick-ball/quick-ball.component';
+import { UploadComponent } from './modules/user/components/upload/upload.component';
 
 interface Location {
   latitude: number;

@@ -35,10 +35,10 @@ export class RecruiterService {
     return this.http.get<any>(url);
   }
 
-  acceptRescueAlert(animalReportId:string,recruiterId:string):Observable<any>{
-    const url = `${environment.api}/recruiter/accept-rescue`;
-    return this.http.post<any>(url,{animalReportId,recruiterId});
-
+  updateAlert(alertData: { animalReportId: string; recruiterId: string; status: string; location?: string }): Observable<any> {
+    const url = `${environment.api}/recruiter/update-alert`;
+    return this.http.post<any>(url, alertData);
   }
+  
 
 }

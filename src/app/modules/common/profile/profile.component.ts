@@ -1,6 +1,6 @@
 import { UserService } from '../../../core/services/user.service';
-import { NavbarComponent } from '../../../components/shared/navbar/navbar.component';
-import { AuthService } from '../../user/services/auth.service';
+import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { AuthService } from '../../user/components/services/auth.service';
 import { Component, OnInit, resolveForwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
@@ -87,6 +87,38 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  getProfile(): Promise<void> {
+    console.log('Fetching profile data for role:', this.role);
+  
+    let profileRequest;
+  
+    if (this.role === 'doctor') {
+      profileRequest = this.doctorService.getProfile();
+    } else if (this.role === 'recruiter') {
+      profileRequest = this.recruiterService.getProfile();
+    } else {
+      profileRequest = this.userService.getProfile();
+    }
+  
+    return new Promise((resolve, reject) => {
+      profileRequest.subscribe({
+        next: (response) => {
+          console.log('Profile data received:', response);
+          this.profile = response.data;
+          console.log('this.profile in getProfile', this.profile);
+          this.toastr.success('Profile fetched successfully!', 'Success');
+          resolve();  
+        },
+        error: (err) => {
+          console.error('Error fetching profile:', err);
+          localStorage.removeItem('accessToken');
+          this.router.navigate(['/login']);
+          this.toastr.error(err.error.message || 'Failed to fetch profile', 'Error');
+          reject(err); 
+        },
+      });
+    });
+  }
   updateNotifications(): void {
     const commonCategory: NotificationCategory = {
       name: 'General',
@@ -204,19 +236,26 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  acceptRescue(notificationId: number): void {
-    console.log('Accepting rescue alert with ID:', notificationId);
-    this.recruiterService.acceptRescueAlert(notificationId.toString(),this.profile._id).subscribe({
+  updateRescue(notificationId:number, status: string, location?: string): void {
+    console.log('Updating rescue alert with ID:', notificationId);
+    
+    const body: any = { animalReportId: notificationId.toString(), recruiterId: this.profile._id, status };
+    if (location) {
+      body.location = location;
+    }
+  
+    this.recruiterService.updateAlert(body).subscribe({
       next: (response) => {
-        console.log('Rescue accepted:', response);
-        this.toastr.success('Rescue accepted successfully!');
+        console.log('Rescue updated:', response);
+        this.toastr.success('Rescue updated successfully!');
       },
       error: (error) => {
-        console.error('Error accepting rescue:', error);
-        this.toastr.error('Failed to accept rescue alert');
+        console.error('Error updating rescue:', error);
+        this.toastr.error('Failed to update rescue alert');
       }
     });
   }
+  
 
 
   startDrive(location: string): void {
@@ -236,48 +275,6 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-
-
-
-
-  getProfile(): Promise<void> {
-    console.log('Fetching profile data for role:', this.role);
-  
-    let profileRequest;
-  
-    if (this.role === 'doctor') {
-      profileRequest = this.doctorService.getProfile();
-    } else if (this.role === 'recruiter') {
-      profileRequest = this.recruiterService.getProfile();
-    } else {
-      profileRequest = this.userService.getProfile();
-    }
-  
-    return new Promise((resolve, reject) => {
-      profileRequest.subscribe({
-        next: (response) => {
-          console.log('Profile data received:', response);
-          this.profile = response.data;
-          console.log('this.profile in getProfile', this.profile);
-          this.toastr.success('Profile fetched successfully!', 'Success');
-          resolve();  
-        },
-        error: (err) => {
-          console.error('Error fetching profile:', err);
-          localStorage.removeItem('accessToken');
-          this.router.navigate(['/login']);
-          this.toastr.error(err.error.message || 'Failed to fetch profile', 'Error');
-          reject(err); 
-        },
-      });
-    });
-  }
-  
-
-
-
-
-
 
   toggleNotificationBar(): void {
     this.showNotifications = !this.showNotifications;

@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ProfileComponent } from '../common/profile/profile.component';
-import { DonateComponent } from './donate/donate.component';
-import { HomeComponent } from '../../components/base/home/home.component';
+import { DonateComponent } from './components/donate/donate.component';
+import { HomeComponent } from '../common/home/home.component';
 import { authGuard } from '../../core/guards/auth.guard';
 
 const routes: Routes = [

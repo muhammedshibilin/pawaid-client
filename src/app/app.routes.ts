@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NotFoundComponent } from './components/error/not-found/not-found.component';
-import { LoginComponent } from './components/base/login/login.component';
+import { NotFoundComponent } from './modules/common/error/not-found/not-found.component';
+import { LoginComponent } from './modules/common/login/login.component';
 import { preventAuthGuard } from './core/guards/prevent-auth.guard';
-import { RegisterComponent } from './components/base/register/register.component';
-import { VerifyEmailComponent } from './components/base/verify-email/verify-email.component';
-import { OtpComponent } from './components/base/otp/otp.component';
-import { ResetPasswordComponent } from './components/base/reset-password/reset-password.component';
+import { RegisterComponent } from './modules/common/register/register.component';
+import { VerifyEmailComponent } from './modules/common/verify-email/verify-email.component';
+import { OtpComponent } from './modules/common/otp/otp.component';
+import { ResetPasswordComponent } from './modules/common/reset-password/reset-password.component';
 
 export const routes: Routes = [
   { 

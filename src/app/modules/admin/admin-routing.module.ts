@@ -1,7 +1,7 @@
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { adminGuard } from '../../core/guards/admin.guard';
-import { UnauthorizedComponent } from '../../components/error/unauthorized/unauthorized.component';
+import { UnauthorizedComponent } from '../common/error/unauthorized/unauthorized.component';
 import { ProfileComponent } from '../common/profile/profile.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';

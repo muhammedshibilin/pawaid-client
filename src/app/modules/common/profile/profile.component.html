@@ -101,7 +101,6 @@
                   </div>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="flex gap-2">
                   <button *ngIf="selectedCategory.name === 'Registrations'"
                     (click)="verifyUser(notification.id, notification.role!)"
@@ -109,20 +108,18 @@
                     Verify
                   </button>
 
-                  <!-- Accept Button - Displayed if status is 'pending' -->
                   <button *ngIf="selectedCategory.name === 'Rescue Alerts' && notification.status === 'pending'"
-                    (click)="acceptRescue(notification.id)"
+                    (click)="updateRescue(notification.id,'accepted')"
                     class="px-3 py-1 bg-green-500 text-white rounded-md text-sm">
                     Accept
                   </button>
 
-                  <!-- Picked Button - Displayed if status is 'accepted' -->
                   <button *ngIf="selectedCategory.name === 'Rescue Alerts' && notification.status === 'accepted'"
+                    (click)="updateRescue(notification.id,'picked',notification.location!)"
                     class="px-3 py-1 bg-gray-500 text-white rounded-md text-sm">
                     Picked
                   </button>
 
-                  <!-- Drive Button - Displayed if status is 'accepted' and location is available -->
                   <button
                     *ngIf="selectedCategory.name === 'Rescue Alerts' && notification.status === 'accepted' && notification.location"
                     (click)="startDrive(notification.location!)"
