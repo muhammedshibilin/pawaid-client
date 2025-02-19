@@ -5,7 +5,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCamera, faMapMarkerAlt, faTimes, faCameraRotate, faRotateRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
 import { UploadService } from '../../../../core/services/upload.service';
-import { environment } from '../../../../../environments/environment.development';
 import piexif from 'piexifjs';
 
 @Component({
@@ -44,52 +43,120 @@ export class UploadComponent {
   }
 
   async startCamera(facingMode: 'user' | 'environment' = this.currentCamera) {
+    console.log('Starting camera with facing mode:', facingMode);
+    
     try {
-      if (this.stream) {
-        this.stopCamera();
-      }
-
+      await this.cleanupExistingStream();
+        const constraints = {
+        video: {
+          facingMode: facingMode,
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        },
+        audio: false
+      };
+  
       try {
-        this.stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: facingMode
-          }
-        });
+        this.stream = await this.requestCamera(constraints);
       } catch (initialError) {
-        console.warn('Failed to get specified camera, trying fallback options...');
-        
-        try {
-          this.stream = await navigator.mediaDevices.getUserMedia({
-            video: {
-              facingMode: 'user'
-            }
-          });
-          this.currentCamera = 'user';
-        } catch (frontCameraError) {
-          this.stream = await navigator.mediaDevices.getUserMedia({
-            video: true
-          });
-          console.warn('Using default available camera');
-        }
+        console.warn('Failed to get specified camera, attempting fallback...', initialError);
+        this.stream = await this.attemptFallbackCameras();
       }
-
+  
       if (this.stream) {
-        this.videoElement.nativeElement.srcObject = this.stream;
-        await this.videoElement.nativeElement.play();
-        this.isCameraOn = true;
-        if (this.stream.getVideoTracks()[0].getSettings().facingMode === facingMode) {
-          this.currentCamera = facingMode;
-        }
+        await this.initializeVideoStream();
       } else {
-        throw new Error('No camera stream available');
+        throw new Error('Failed to initialize any camera');
       }
-
-    } catch (err) {
-      console.error('Error accessing camera:', err);
-      alert('Could not access any camera');
-      this.isCameraOn = false;
+  
+    } catch (error) {
+      this.handleCameraError(error);
     }
   }
+  
+  private async cleanupExistingStream() {
+    if (this.stream) {
+      console.log('Cleaning up existing stream');
+      this.stream.getTracks().forEach(track => track.stop());
+      this.stream = null;
+      if (this.videoElement?.nativeElement) {
+        this.videoElement.nativeElement.srcObject = null;
+      }
+    }
+  }
+  
+  private async requestCamera(constraints: MediaStreamConstraints): Promise<MediaStream> {
+    console.log('Requesting camera with constraints:', constraints);
+    return await navigator.mediaDevices.getUserMedia(constraints);
+  }
+  
+  private async attemptFallbackCameras(): Promise<MediaStream> {
+    console.log('Attempting fallback cameras');
+    
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user' },
+        audio: false
+      });
+      this.currentCamera = 'user';
+      return stream;
+    } catch (frontError) {
+      console.warn('Front camera failed, trying default camera', frontError);
+    }
+  
+    return await navigator.mediaDevices.getUserMedia({ 
+      video: true,
+      audio: false
+    });
+  }
+  
+  private async initializeVideoStream() {
+    if (!this.videoElement?.nativeElement) {
+      throw new Error('Video element not found');
+    }
+  
+    console.log('Initializing video stream');
+    this.videoElement.nativeElement.srcObject = this.stream;
+    
+    await new Promise<void>((resolve) => {
+      this.videoElement.nativeElement.onloadedmetadata = () => {
+        resolve();
+      };
+    });
+  
+    await this.videoElement.nativeElement.play();
+    this.isCameraOn = true;
+  
+    const currentTrack = this.stream?.getVideoTracks()[0];
+    if (currentTrack) {
+      const settings = currentTrack.getSettings();
+      console.log('Camera settings:', settings);
+      if (settings.facingMode) {
+        this.currentCamera = settings.facingMode as 'user' | 'environment';
+      }
+    }
+  }
+  
+  private handleCameraError(error: any) {
+    console.error('Camera initialization failed:', error);
+    this.isCameraOn = false;
+    this.stream = null;
+    
+    let errorMessage = 'Could not access camera: ';
+    if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+      errorMessage += 'Permission denied. Please allow camera access.';
+    } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
+      errorMessage += 'No camera found on this device.';
+    } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
+      errorMessage += 'Camera is in use by another application.';
+    } else {
+      errorMessage += error.message || 'Unknown error occurred.';
+    }
+    
+    this.toastr.error(errorMessage, 'Camera Error');
+  }
+  
+  
 
   async checkAvailableCameras(): Promise<MediaDeviceInfo[]> {
     const devices = await navigator.mediaDevices.enumerateDevices();
@@ -112,9 +179,23 @@ export class UploadComponent {
 
 
  
-  retakePhoto(){
-    this.capturedImage = null;
-    this.startCamera();
+  async retakePhoto() {
+    this.capturedImage = null; 
+  
+    try {
+      this.stopCamera();
+  
+      if (this.videoElement?.nativeElement) {
+        this.videoElement.nativeElement.srcObject = null;
+      }
+  
+      await this.startCamera(this.currentCamera); 
+  
+      this.isCameraOn = true;
+    } catch (error) {
+      console.error('Error restarting camera:', error);
+      this.toastr.error('Failed to restart camera', 'Error');
+    }
   }
  
 
@@ -136,7 +217,6 @@ export class UploadComponent {
     if (!this.isCameraOn) return;
   
     try {
-      // Get the location from the device using GPS
       const position = await this.getLocationFromGPS();
       
       if (!position) {
@@ -150,7 +230,6 @@ export class UploadComponent {
   
       console.log('Device Location:', this.location);
   
-      // Proceed with image capturing
       const video = this.videoElement.nativeElement;
       const canvas = document.createElement('canvas');
       canvas.width = video.videoWidth;
@@ -163,7 +242,6 @@ export class UploadComponent {
   
       ctx.drawImage(video, 0, 0);
   
-      // Convert canvas to Blob and add EXIF data
       canvas.toBlob(async (blob) => {
         if (!blob) {
           throw new Error('Failed to create blob');
@@ -173,28 +251,25 @@ export class UploadComponent {
         reader.onloadend = async () => {
           const binary = reader.result as string;
   
-          // Create EXIF data
+        
           const exifData = {
             "0th": {},
             "Exif": {},
             "GPS": {
-              0: [2, 2, 0, 0], // GPSVersionID
-              1: this.location!.latitude >= 0 ? "N" : "S", // GPSLatitudeRef
-              2: this.convertToDegreesMinutesSeconds(Math.abs(this.location!.latitude)), // GPSLatitude
-              3: this.location!.longitude >= 0 ? "E" : "W", // GPSLongitudeRef
-              4: this.convertToDegreesMinutesSeconds(Math.abs(this.location!.longitude)) // GPSLongitude
+              0: [2, 2, 0, 0],
+              1: this.location!.latitude >= 0 ? "N" : "S", 
+              2: this.convertToDegreesMinutesSeconds(Math.abs(this.location!.latitude)), 
+              3: this.location!.longitude >= 0 ? "E" : "W", 
+              4: this.convertToDegreesMinutesSeconds(Math.abs(this.location!.longitude)) 
             }
           };
   
-          // Add EXIF to image using piexif.js
           const exifBytes = piexif.dump(exifData);
           const newJpeg = piexif.insert(exifBytes, binary);
   
-          // Store both the image and location
           this.capturedImage = newJpeg;
           console.log('EXIF data added:', exifData);
   
-          // Verify EXIF data
           const exifObj = piexif.load(this.capturedImage);
           console.log('Verified EXIF data:', exifObj);
         };
@@ -208,7 +283,6 @@ export class UploadComponent {
     }
   }
   
-  // Function to get location from GPS
   async getLocationFromGPS(): Promise<{ latitude: number, longitude: number } | null> {
     return new Promise((resolve, reject) => {
       if (navigator.geolocation) {
@@ -221,12 +295,12 @@ export class UploadComponent {
           },
           (error) => {
             console.error('Error getting GPS location:', error);
-            reject('Unable to retrieve location');  // Reject if GPS fails
+            reject('Unable to retrieve location'); 
           }
         );
       } else {
         console.error('Geolocation is not supported by this browser.');
-        reject('Geolocation not supported');  // Reject if geolocation is not supported
+        reject('Geolocation not supported');
       }
     });
   }
@@ -249,14 +323,12 @@ async submit() {
     try {
       const formData = new FormData();
       
-      // Convert captured image to Blob
       const imageBlob = await this.base64ToBlob(this.capturedImage!);
       const imageFile = new File([imageBlob], `animalreport-${Date.now()}.jpg`, { 
         type: 'image/jpeg',
         lastModified: Date.now()
       });
       
-      // Append image, title, and location to form data
       formData.append('title', this.title.trim());
       formData.append('image', imageFile);
       formData.append('location', JSON.stringify(this.location));

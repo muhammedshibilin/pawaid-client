@@ -29,8 +29,8 @@ export class AppComponent implements OnInit, OnDestroy {
   private socket = io(environment.api);
   locationData: Location | null = null;
   private lastLocation: Location | null = null;
-  private readonly MIN_DISTANCE = 0.001; // 1 meter in km
-  private readonly UPDATE_INTERVAL = 3000; // 3 seconds
+  private readonly MIN_DISTANCE = 0.001; 
+  private readonly UPDATE_INTERVAL = 3000; 
   private locationUpdateInterval: any;
 
   hideQuickBall: Boolean = true;
@@ -68,7 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     if (!navigator.geolocation) {
-      console.error('❌ Geolocation is not supported by this browser.');
+      console.error('Geolocation is not supported by this browser.');
       return;
     }
 
@@ -85,10 +85,10 @@ export class AppComponent implements OnInit, OnDestroy {
           longitude: position.coords.longitude,
           recruiterId: recruiterId
         };
-        console.log('✅ Initial location set:', this.lastLocation);
+        console.log('Initial location set:', this.lastLocation);
       },
       (error) => {
-        console.error('❌ Error getting initial location:', error);
+        console.error('Error getting initial location:', error);
         this.handleGeolocationError(error);
       },
       { enableHighAccuracy: true }
@@ -117,8 +117,8 @@ export class AppComponent implements OnInit, OnDestroy {
         const distance = this.getDistanceFromLatLon(this.lastLocation, newLocation) * 1000; 
         console.log('📏 Calculated Distance:', distance.toFixed(2), 'meters');
 
-        if (distance >= 1) { 
-          console.log('🚀 Moved more than 1 meter. Emitting location update...');
+        if (distance >= this.MIN_DISTANCE) { 
+          console.log(' Moved more than 1');
           this.locationData = newLocation;
           this.lastLocation = newLocation;
           this.socket.emit('updateLocation', { ...this.locationData});
@@ -127,12 +127,12 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        console.error('❌ Error tracking location:', error);
+        console.error('Error tracking location:', error);
         this.handleGeolocationError(error);
       },
       {
         enableHighAccuracy: true,
-        maximumAge: 3000, // Cached position allowed for 3 seconds
+        maximumAge: 3000, 
         timeout: 10000
       }
     );
@@ -141,7 +141,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private getDistanceFromLatLon(loc1: Location | null, loc2: Location | null): number {
     if (!loc1 || !loc2) return 0;
 
-    const R = 6371; // Radius of Earth in km
+    const R = 6371;
     const dLat = this.deg2rad(loc2.latitude - loc1.latitude);
     const dLon = this.deg2rad(loc2.longitude - loc1.longitude);
 
@@ -152,7 +152,7 @@ export class AppComponent implements OnInit, OnDestroy {
       Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Distance in km
+    const distance = R * c; 
 
     return distance;
   }
@@ -166,13 +166,13 @@ export class AppComponent implements OnInit, OnDestroy {
     
     switch (error.code) {
       case error.PERMISSION_DENIED:
-        errorMessage = '❌ Location permission denied by user.';
+        errorMessage = ' Location permission denied by user.';
         break;
       case error.POSITION_UNAVAILABLE:
-        errorMessage = '❌ Location information is unavailable.';
+        errorMessage = ' Location information is unavailable.';
         break;
       case error.TIMEOUT:
-        errorMessage = '❌ Location request timed out.';
+        errorMessage = 'Location request timed out.';
         break;
     }
     

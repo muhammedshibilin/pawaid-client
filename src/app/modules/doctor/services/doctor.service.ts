@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { loginResponse } from '../../interfaces/loginResponse.interface';
-import { registerResponse } from '../../interfaces/registerResponse.interface';
+import { loginResponse } from '../../../core/interfaces/responses/loginResponse.interface';
+import { registerResponse } from '../../../core/interfaces/responses/registerResponse.interface';
 import { environment } from '../../../../environments/environment.development';
 
 @Injectable({
@@ -26,6 +26,11 @@ export class DoctorService {
 
      getProfile(): Observable<any> {
         return this.http.get(`${environment.api}/doctor/profile`,{withCredentials:true});
+      }
+
+      fetchRescueAppointment(doctorId:number):Observable<any>{
+        const url = `${environment.api}/doctor/rescue-appointment/${doctorId}`;
+        return this.http.get<any>(url);
       }
   
 }

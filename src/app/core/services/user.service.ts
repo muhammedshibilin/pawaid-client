@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
-import { loginResponse } from '../interfaces/loginResponse.interface';
-import { logoutResponse } from '../interfaces/logoutResponse.interface';
+import { loginResponse } from '../interfaces/responses/loginResponse.interface';
+import { logoutResponse } from '../interfaces/responses/logoutResponse.interface';
 
 @Injectable({
   providedIn: 'root'

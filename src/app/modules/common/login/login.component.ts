@@ -6,8 +6,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AdminService } from '../../../core/services/admin/admin.service';
-import { DoctorService } from '../../../core/services/doctor/doctor.service';
-import { RecruiterService } from '../../../core/services/recruiter/recruiter.service';
+import { DoctorService } from '../../doctor/services/doctor.service';
+import { RecruiterService } from '../../rescuer/service/recruiter.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { 
   faUser, 

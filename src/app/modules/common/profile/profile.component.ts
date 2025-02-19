@@ -7,8 +7,11 @@ import { ToastrService } from 'ngx-toastr';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Router } from '@angular/router';
 import { AdminService } from '../../../core/services/admin/admin.service';
-import { DoctorService } from '../../../core/services/doctor/doctor.service';
-import { RecruiterService } from '../../../core/services/recruiter/recruiter.service';
+import { DoctorService } from '../../doctor/services/doctor.service';
+import { RecruiterService } from '../../rescuer/service/recruiter.service';
+import { AnimalService } from '../../animal/services/animal.service';
+import { AnimalReportUpdateResponse } from '../../../core/interfaces/responses/animal-report.interface';
+import { AnimalStatus } from '../../../core/enums/animal-status.enum';
 
 interface Notification {
   id: number;
@@ -57,6 +60,7 @@ export class ProfileComponent implements OnInit {
     private authService: AuthService,
     private adminService: AdminService,
     private toastr: ToastrService,
+    private animalService:AnimalService,
     private notificationService: NotificationService,
     private doctorService: DoctorService,
     private recruiterService: RecruiterService,
@@ -131,20 +135,54 @@ export class ProfileComponent implements OnInit {
         this.fetchUnverifiedUsers(commonCategory);
         break;
       case 'recruiter':
-        this.fetchRescueAlerts(commonCategory)
+        this.updateRecruiterNotification(commonCategory)
         break;
       case 'doctor':
-        this.notificationCategories = [commonCategory, ...this.doctorNotifications];
-        break;
+        this.updateDoctorNotifications(commonCategory)
+      break;
       default:
         this.notificationCategories = [commonCategory];
     }
     this.selectedCategoryIndex = 0;
   }
 
+  updateDoctorNotifications(commonCategory: NotificationCategory) {
+    const doctorId = this.profile._id;
+    this.doctorService.fetchRescueAppointment(doctorId).subscribe({
+      next: (response) => {
+        console.log("Fetched Appointments:",response);
+  
+        const appointmentNotifications = response.data.map((appointment: any) => ({
+          id: appointment.id,
+          title: `Rescue Appointment: ${appointment.description}`,
+          time: new Date(appointment.date),
+          icon: "fa fa-user-md",
+          role: "doctor",
+          status: appointment.status,
+        }));
+  
+        const appointmentCategory: NotificationCategory = {
+          name: "Rescue Appointments",
+          icon: "fa fa-calendar-check",
+          notifications: appointmentNotifications,
+        };
+  
+        this.notificationCategories = [commonCategory, appointmentCategory, ...this.notificationCategories];
+      },
+      error: (error) => {
+        console.error("Error fetching appointments:", error);
+      },
+    });
+  }
+  
 
-  fetchRescueAlerts(commonCategory: NotificationCategory) {
+  updateRecruiterNotification(commonCategory: NotificationCategory) {
     console.log('this profile',this.profile)
+    const nearbyRecruiterCategory: NotificationCategory = {
+      name: 'Nearby Recruiters',
+      icon: 'fa fa-users',
+      notifications: []  
+    };
     const recruiterId = this.profile._id;
     this.recruiterService.fetchRescueAlertsForRecruiter(recruiterId).subscribe({
       next: (response) => {
@@ -153,13 +191,12 @@ export class ProfileComponent implements OnInit {
         const pendingAlerts = response.data.map((alert: any) => ({
           id: alert.id,
           title: `Rescue Alert: ${alert.description}`,
-          time: new Date(alert.createdAt),
+          time: new Date(alert.date),
           icon: 'fa fa-exclamation-circle',
           role: 'recruiter',
           status:alert.status,
           location: `https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=${alert.location.lat},${alert.location.lng}&travelmode=driving`,
         }));
-
 
         const rescueAlertCategory: NotificationCategory = {
           name: 'Rescue Alerts',
@@ -167,8 +204,7 @@ export class ProfileComponent implements OnInit {
           notifications: pendingAlerts
         };
 
-
-        this.notificationCategories = [commonCategory, rescueAlertCategory, ...this.recruiterNotifications];
+        this.notificationCategories = [commonCategory ,rescueAlertCategory,nearbyRecruiterCategory, ...this.recruiterNotifications];
       },
       error: (error) => {
         console.error('Error fetching alerts:', error);
@@ -236,18 +272,34 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  updateRescue(notificationId:number, status: string, location?: string): void {
-    console.log('Updating rescue alert with ID:', notificationId);
-    
-    const body: any = { animalReportId: notificationId.toString(), recruiterId: this.profile._id, status };
-    if (location) {
-      body.location = location;
+  updateRescue(notificationId: number, status: string, role: 'recruiter' | 'doctor', location?: string): void {
+    console.log('Updating rescue alert with ID:', notificationId, this.profile._id, location);
+  
+    const body: any = { 
+      animalReportId: notificationId.toString(), 
+      status 
+    };
+  
+    if (role === 'recruiter') {
+      body.recruiterId = this.profile._id;
+    } else if (role === 'doctor') {
+      body.doctorId = this.profile._id;
     }
   
-    this.recruiterService.updateAlert(body).subscribe({
-      next: (response) => {
+    if (location) {
+      const coords = this.extractCoordinatesFromUrl(location);
+      if (coords) {
+        body.location = coords; 
+      }
+    }
+  
+    this.animalService.updateAlert(body).subscribe({
+      next: (response:AnimalReportUpdateResponse) => {
         console.log('Rescue updated:', response);
         this.toastr.success('Rescue updated successfully!');
+        if(response.data.status==AnimalStatus.PICKED){
+
+        }
       },
       error: (error) => {
         console.error('Error updating rescue:', error);
@@ -256,7 +308,17 @@ export class ProfileComponent implements OnInit {
     });
   }
   
-
+  
+  private extractCoordinatesFromUrl(url: string): { latitude: number; longitude: number } | null {
+    const match = url.match(/destination=([-+]?\d*\.\d+),([-+]?\d*\.\d+)/);
+    if (match) {
+      return {
+        latitude: parseFloat(match[1]),
+        longitude: parseFloat(match[2])
+      };
+    }
+    return null;
+  }
 
   startDrive(location: string): void {
     window.open(location, '_blank');

@@ -14,11 +14,9 @@ import { CommonModule } from '@angular/common';
           <img src="assets/user/255-2550411_404-error-images-free-png-transparent-png.webp" alt="404" class="w-64 h-64 mx-auto absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"/>
         </div>
 
-        <!-- Error Message -->
         <h1 class="text-4xl font-bold text-gray-800 mb-4">Page Not Found</h1>
         <p class="text-gray-600 mb-8">Oops! The page you're looking for doesn't exist or has been moved.</p>
 
-        <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <button 
             (click)="goBack()" 
@@ -46,6 +44,8 @@ import { CommonModule } from '@angular/common';
     }
   `]
 })
+
+
 export class NotFoundComponent {
   constructor(private router: Router) {}
 

@@ -79,15 +79,12 @@
             </div>
           </div>
 
-          <!-- Notifications List -->
           <div class="divide-y divide-gray-100" [class.hidden]="!this.showNotifications">
-            <!-- Show message when no notifications -->
             <div *ngIf="!selectedCategory?.notifications?.length" class="p-4 text-center text-gray-500">
               <i class="fas fa-inbox text-4xl mb-2"></i>
               <p>No notifications in this category</p>
             </div>
-
-            <!-- Show notifications when they exist -->
+          
             <ng-container *ngIf="selectedCategory?.notifications?.length">
               <div *ngFor="let notification of selectedCategory.notifications"
                 class="p-4 hover:bg-gray-50 transition-colors duration-300 cursor-pointer flex justify-between items-center">
@@ -109,13 +106,13 @@
                   </button>
 
                   <button *ngIf="selectedCategory.name === 'Rescue Alerts' && notification.status === 'pending'"
-                    (click)="updateRescue(notification.id,'accepted')"
+                    (click)="updateRescue(notification.id,'accepted','recruiter')"
                     class="px-3 py-1 bg-green-500 text-white rounded-md text-sm">
                     Accept
                   </button>
 
                   <button *ngIf="selectedCategory.name === 'Rescue Alerts' && notification.status === 'accepted'"
-                    (click)="updateRescue(notification.id,'picked',notification.location!)"
+                    (click)="updateRescue(notification.id,'picked','recruiter',notification.location!)"
                     class="px-3 py-1 bg-gray-500 text-white rounded-md text-sm">
                     Picked
                   </button>
@@ -126,6 +123,13 @@
                     class="px-3 py-1 bg-blue-500 text-white rounded-md text-sm">
                     Drive
                   </button>
+
+                  <button
+                  *ngIf="selectedCategory.name === 'Rescue Appointments' && notification.status === 'picked' && notification.role=='doctor'"
+                  (click)="updateRescue(notification.id,'booked','doctor')"
+                  class="px-3 py-1 bg-blue-500 text-white rounded-md text-sm">
+                  accept
+                </button>
 
                 </div>
               </div>

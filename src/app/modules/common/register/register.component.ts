@@ -4,8 +4,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Router } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { ToastrService } from 'ngx-toastr';
-import { DoctorService } from '../../../core/services/doctor/doctor.service';
-import { RecruiterService } from '../../../core/services/recruiter/recruiter.service';
+import { DoctorService } from '../../doctor/services/doctor.service';
+import { RecruiterService } from '../../rescuer/service/recruiter.service';
 import { environment } from '../../../../environments/environment.development';
 
 declare var google: any;
