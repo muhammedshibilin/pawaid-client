@@ -12,6 +12,8 @@ import { RecruiterService } from '../../rescuer/service/recruiter.service';
 import { AnimalService } from '../../animal/services/animal.service';
 import { AnimalReportUpdateResponse } from '../../../core/interfaces/responses/animal-report.interface';
 import { AnimalStatus } from '../../../core/enums/animal-status.enum';
+import { IDoctor } from '../../../core/interfaces/entities/doctor.interface';
+import { map, of, switchMap } from 'rxjs';
 
 interface Notification {
   id: number;
@@ -177,24 +179,21 @@ export class ProfileComponent implements OnInit {
   
 
   updateRecruiterNotification(commonCategory: NotificationCategory) {
-    console.log('this profile',this.profile)
-    const nearbyRecruiterCategory: NotificationCategory = {
-      name: 'Nearby Recruiters',
-      icon: 'fa fa-users',
-      notifications: []  
-    };
     const recruiterId = this.profile._id;
-    this.recruiterService.fetchRescueAlertsForRecruiter(recruiterId).subscribe({
-      next: (response) => {
-        console.log('Fetched alerts:', response);
+    this.recruiterService.fetchRescueAlertsForRecruiter(recruiterId).pipe(
+      switchMap((response) => {
+        if (!Array.isArray(response.data) || response.data.length === 0) {
+          return of(null); 
+        }
 
+        console.log('dtaaa')
         const pendingAlerts = response.data.map((alert: any) => ({
           id: alert.id,
           title: `Rescue Alert: ${alert.description}`,
           time: new Date(alert.date),
           icon: 'fa fa-exclamation-circle',
           role: 'recruiter',
-          status:alert.status,
+          status: alert.status,
           location: `https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=${alert.location.lat},${alert.location.lng}&travelmode=driving`,
         }));
 
@@ -204,13 +203,28 @@ export class ProfileComponent implements OnInit {
           notifications: pendingAlerts
         };
 
-        this.notificationCategories = [commonCategory ,rescueAlertCategory,nearbyRecruiterCategory, ...this.recruiterNotifications];
-      },
-      error: (error) => {
-        console.error('Error fetching alerts:', error);
+        this.notificationCategories = [commonCategory, rescueAlertCategory, ...this.recruiterNotifications];
+
+        const firstAlert = response.data[0];
+        if ([AnimalStatus.PICKED, AnimalStatus.BOOKED, AnimalStatus.TREATED].includes(firstAlert.status)) {
+          return this.fetchNearbyDoctors({ latitude: firstAlert.location.lat, longitude: firstAlert.location.lng });
+        }
+        return of(null);
+      })
+    ).subscribe((nearbyDoctors) => {
+      if (nearbyDoctors) {
+        console.log('nearby docotors',nearbyDoctors)
+        const index = this.notificationCategories.findIndex(cat => cat.name === "Available Doctors");
+        if (index !== -1) {
+          this.notificationCategories[index] = nearbyDoctors;
+        } else {
+          this.notificationCategories.push(nearbyDoctors);
+        }
       }
     });
-  }
+}
+
+
 
 
 
@@ -294,11 +308,24 @@ export class ProfileComponent implements OnInit {
     }
   
     this.animalService.updateAlert(body).subscribe({
-      next: (response:AnimalReportUpdateResponse) => {
+      next: (response: AnimalReportUpdateResponse) => {
         console.log('Rescue updated:', response);
         this.toastr.success('Rescue updated successfully!');
-        if(response.data.status==AnimalStatus.PICKED){
 
+        if (response.data.status === AnimalStatus.PICKED) {
+          console.log("Fetching nearby doctors after rescue picked:", response.data.location);
+          
+          this.fetchNearbyDoctors({ latitude: response.data.location.latitude, longitude: response.data.location.longitude })
+            .subscribe(nearbyDoctors => {
+              console.log("Fetched Nearby Doctors:", nearbyDoctors);
+
+              const index = this.notificationCategories.findIndex(cat => cat.name === "Available Doctors");
+              if (index !== -1) {
+                this.notificationCategories[index] = nearbyDoctors;
+              } else {
+                this.notificationCategories.push(nearbyDoctors);
+              }
+            });
         }
       },
       error: (error) => {
@@ -306,6 +333,24 @@ export class ProfileComponent implements OnInit {
         this.toastr.error('Failed to update rescue alert');
       }
     });
+  }
+
+  
+  fetchNearbyDoctors(location: { latitude: number; longitude: number }) {
+    console.log('location',location)
+    return this.doctorService.fetchNearbyDoctors(location).pipe(
+      map((doctors: IDoctor[]) => ({
+        name: "Available Doctors",
+        icon: "fa fa-stethoscope",
+        notifications: doctors.map((doctor: IDoctor) => ({
+          id: doctor._id,
+          title: `Dr. ${doctor.username}`,
+          icon: "fa fa-user-md",
+          time: new Date(doctor.createdAt!),
+          status:'available',
+        }))
+      }))
+    );
   }
   
   

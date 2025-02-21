@@ -84,7 +84,7 @@
               <i class="fas fa-inbox text-4xl mb-2"></i>
               <p>No notifications in this category</p>
             </div>
-          
+
             <ng-container *ngIf="selectedCategory?.notifications?.length">
               <div *ngFor="let notification of selectedCategory.notifications"
                 class="p-4 hover:bg-gray-50 transition-colors duration-300 cursor-pointer flex justify-between items-center">
@@ -116,6 +116,18 @@
                     class="px-3 py-1 bg-gray-500 text-white rounded-md text-sm">
                     Picked
                   </button>
+                  <button *ngIf="selectedCategory.name === 'Rescue Alerts' && notification.status === 'booked'"
+                    class="px-3 py-1 bg-gray-500 text-white rounded-md text-sm">
+                    Booked
+                  </button>
+                  <button *ngIf="selectedCategory.name === 'Rescue Alerts' && notification.status === 'picked'"
+                    class="px-3 py-1 bg-gray-500 text-white rounded-md text-sm">
+                    waiting for booking
+                  </button>
+                  <button *ngIf="selectedCategory.name === 'Rescue Alerts' && notification.status === 'treated'"
+                    class="px-3 py-1 bg-gray-500 text-white rounded-md text-sm">
+                    Treated
+                  </button>
 
                   <button
                     *ngIf="selectedCategory.name === 'Rescue Alerts' && notification.status === 'accepted' && notification.location"
@@ -125,11 +137,35 @@
                   </button>
 
                   <button
-                  *ngIf="selectedCategory.name === 'Rescue Appointments' && notification.status === 'picked' && notification.role=='doctor'"
-                  (click)="updateRescue(notification.id,'booked','doctor')"
+                    *ngIf="selectedCategory.name === 'Rescue Appointments' && notification.status === 'picked' && notification.role=='doctor'"
+                    (click)="updateRescue(notification.id,'booked','doctor')"
+                    class="px-3 py-1 bg-blue-500 text-white rounded-md text-sm">
+                    accept
+                  </button>
+                  <button
+                    *ngIf="selectedCategory.name === 'Rescue Appointments' && notification.status === 'booked' && notification.role=='doctor'"
+                    (click)="updateRescue(notification.id,'treated','doctor')"
+                    class="px-3 py-1 bg-blue-500 text-white rounded-md text-sm">
+                    Treat
+                  </button>
+                  <button
+                  *ngIf="selectedCategory.name === 'Rescue Appointments' && notification.status === 'treated' && notification.role=='doctor'"
                   class="px-3 py-1 bg-blue-500 text-white rounded-md text-sm">
-                  accept
+                  Treated
                 </button>
+                  <button *ngIf="selectedCategory.name === 'Available Doctors' && notification.status === 'availbale'"
+                  class="px-3 py-1 bg-green-500 text-white rounded-md text-sm">
+                  waiting for accepting
+                </button>
+
+                  <button *ngIf="selectedCategory.name === 'Available Doctors' && notification.status === 'booked'"
+                    class="px-3 py-1 bg-green-500 text-white rounded-md text-sm">
+                    Booked
+                  </button>
+                  <button *ngIf="selectedCategory.name === 'Available Doctors' && notification.status === 'treated'"
+                    class="px-3 py-1 bg-green-500 text-white rounded-md text-sm">
+                    Treated
+                  </button>
 
                 </div>
               </div>

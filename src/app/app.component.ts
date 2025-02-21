@@ -68,7 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     if (!navigator.geolocation) {
-      console.error('Geolocation is not supported by this browser.');
+      console.error('Geolocation is not supported ');
       return;
     }
 
@@ -86,6 +86,7 @@ export class AppComponent implements OnInit, OnDestroy {
           recruiterId: recruiterId
         };
         console.log('Initial location set:', this.lastLocation);
+        this.socket.emit('updateLocation', { ...this.locationData});
       },
       (error) => {
         console.error('Error getting initial location:', error);
@@ -115,7 +116,7 @@ export class AppComponent implements OnInit, OnDestroy {
         };
 
         const distance = this.getDistanceFromLatLon(this.lastLocation, newLocation) * 1000; 
-        console.log('📏 Calculated Distance:', distance.toFixed(2), 'meters');
+        console.log('Calculated Distance:', distance.toFixed(2), 'meters');
 
         if (distance >= this.MIN_DISTANCE) { 
           console.log(' Moved more than 1');
@@ -123,7 +124,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.lastLocation = newLocation;
           this.socket.emit('updateLocation', { ...this.locationData});
         } else {
-          console.log('⏳ Movement not significant, skipping update.');
+          console.log(' Movement not significant, skipping update.');
         }
       },
       (error) => {

@@ -22,4 +22,5 @@ export class AnimalService {
     const url = `${environment.api}/animal/update-alert`;
     return this.http.post<AnimalReportUpdateResponse>(url, alertData);
   }
+  
 }
