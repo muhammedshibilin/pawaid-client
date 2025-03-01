@@ -65,7 +65,7 @@ export class DonateComponent implements OnInit {
   ngOnInit() {
     this.initializeParticles();
     this.setupMouseTrail();
-    this.stripe = Stripe(environment.stripe_pk);
+    this.stripe = this.stripe(environment.stripe_pk);
     const elements = this.stripe.elements();
     this.card = elements.create('card');
     this.card.mount('#card-element');

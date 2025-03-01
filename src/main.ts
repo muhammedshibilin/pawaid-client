@@ -17,9 +17,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { environment } from './environments/environment.development';
-import { GoogleMapsModule } from '@angular/google-maps';
-import { StripeModule } from 'stripe-angular';
 import { NgxStripeModule, provideNgxStripe } from 'ngx-stripe';
+
+
 
 
 if ('serviceWorker' in navigator) {
@@ -45,11 +45,10 @@ bootstrapApplication(AppComponent, {
     provideAuth(() => getAuth()),
     provideMessaging(() => getMessaging()), 
     JwtHelperService,
-    GoogleMapsModule,
     DragDropModule,
     NgxStripeModule,
     provideNgxStripe(environment.stripe_pk),
-    importProvidersFrom([FontAwesomeModule,StripeModule]),
+    importProvidersFrom([FontAwesomeModule,NgxStripeModule]),
     provideToastr({
       positionClass: 'toast-top-center',
       preventDuplicates: true,

@@ -5,11 +5,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCamera, faMapMarkerAlt, faTimes, faCameraRotate, faRotateRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
 import { UploadService } from '../../../../core/services/upload.service';
-import piexif from 'piexifjs';
+import * as piexif from 'piexifjs/dist/piexif';
 
 @Component({
   selector: 'app-upload',
-  standalone: true,
   imports: [CommonModule, FontAwesomeModule, FormsModule],
   templateUrl: './upload.component.html',
   styleUrl: './upload.component.css'
